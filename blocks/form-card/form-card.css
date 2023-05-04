@@ -1,0 +1,7 @@
+.form-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 82.5%;
+    margin: auto;
+}

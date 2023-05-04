@@ -1,0 +1,7 @@
+.popup__toggle {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: -32px;
+    right: -32px;
+}

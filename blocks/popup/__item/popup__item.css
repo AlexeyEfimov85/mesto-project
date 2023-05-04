@@ -1,0 +1,36 @@
+.popup__item {
+    width: 83%;
+    margin: 30px auto 0;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 1);
+    padding: 0;
+}
+
+.popup__itemt::-webkit-input-placeholder {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.21;
+}
+
+.popup__item::-moz-placeholder {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.21;
+}
+
+.popup__item::-ms-input-placeholder {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.21;
+}
+
+.popup__item::placeholder {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.21;
+}
+
