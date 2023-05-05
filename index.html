@@ -13,99 +13,79 @@
         <img src="./images/logo.svg" alt="логотип сайта" class="logo">
     </header>
     <main>
-        <form class="profile">
+        <section class="profile">
             <div class="profile__info">
                 <img src="./images/Avatar.png" alt="аватарка" class="profile__avatar">
                 <div class="profile__text">
-                    <label for="edit-profile">
-                        <span class="profile__name">Жак-Ив Кусто</span>
-                        <input type="image" src="./images/Edit_Button.svg" alt="кнопка редактирования" id="edit-profile" class="profile__button-edit">
-                    </label>
-                    <span class="profile__description">Исследователь океана</span>
+                    <div class="wrapper-flex">
+                        <h1 class="profile__title">Жак-Ив Кусто</h1>
+                        <button type="button" class="profile__button-edit"></button>
+                    </div>
+                    <p class="profile__description">Исследователь океана</p>
                 </div>
             </div>
             <!--<input type="image" src="./images/Add_Button.png" alt="знак плюс" class="profile__button-create">-->
-            <input type="submit" class="profile__button-create">
-        </form>
+            <button type="button" class="profile__button-create"></button>
+        </section>
         <section class="places">
             <div class="card">
                 <img src="./images/karachaevsk.jpg" alt="фотография церкви" class="card__image">
-                <form class="form-card">
-                    <h2 class="form-card__title">Карачаевск</h2>
-                    <label for="karachaevsk">
-                        <input type="checkbox" name="like" id="karachaevsk" value="like" class="form-card__item">
-                        <span class="form-card__pseudo-item"></span>
-                    </label>
-                </form>
+                <div class="card__description">
+                    <h2 class="card__title">Карачаевск</h2>
+                    <button type="button" name="like" class="card__button">
+                </div>
             </div>
             <div class="card">
                 <img src="./images/elbrus.png" alt="фотография горы в далеке" class="card__image">
-                <form class="form-card">
-                    <h2 class="form-card__title">Гора Эльбрус</h2>
-                    <label for="gora-elbrus">
-                        <input type="checkbox" name="like" id="gora-elbrus" value="like" class="form-card__item">
-                        <span class="form-card__pseudo-item"></span>
-                    </label>
-                </form>
+                <div class="card__description">
+                    <h2 class="card__title">Гора Эльбрус</h2>
+                    <button type="button" name="like" class="card__button">
+                </div>
             </div>
             <div class="card">
                 <img src="./images/dombai.png" alt="фотография горных склонов" class="card__image">
-                <form class="form-card">
-                    <h2 class="form-card__title">Домбай</h2>
-                    <label for="dombai">
-                        <input type="checkbox" name="like" id="dombai" value="like" class="form-card__item">
-                        <span class="form-card__pseudo-item"></span>
-                    </label>
-                </form>
+                <div class="card__description">
+                    <h2 class="card__title">Домбай</h2>
+                    <button type="button" name="like" class="card__button">
+                </div>
             </div>
             <div class="card">
                 <img src="./images/elbrus.png" alt="фотография горы в далеке" class="card__image">
-                <form class="form-card">
-                    <h2 class="form-card__title">Гора Эльбрус</h2>
-                    <label for="gora-elbrus_1">
-                        <input type="checkbox" name="like" id="gora-elbrus_1" value="like" class="form-card__item">
-                        <span class="form-card__pseudo-item"></span>
-                    </label>
-                </form>
+                <div class="card__description">
+                    <h2 class="card__title">Гора Эльбрус</h2>
+                    <button type="button" name="like" class="card__button">
+                </div>
             </div>
             <div class="card">
                 <img src="./images/dombai.png" alt="фотография горных склонов" class="card__image">
-                <form class="form-card">
-                    <h2 class="form-card__title">Домбай</h2>
-                    <label for="dombai_1">
-                        <input type="checkbox" name="like" id="dombai_1" value="like" class="form-card__item">
-                        <span class="form-card__pseudo-item"></span>
-                    </label>
-                </form>
+                <div class="card__description">
+                    <h2 class="card__title">Домбай</h2>
+                    <button type="button" name="like" class="card__button">
+                </div>
             </div>
             <div class="card">
                 <img src="./images/karachaevsk.jpg" alt="фотография церкви" class="card__image">
-                <form class="form-card">
-                    <h2 class="form-card__title">Карачаево-Черкесия</h2>
-                    <label for="karachaevo-cherkesia">
-                        <input type="checkbox" name="like" id="karachaevo-cherkesia" value="like"
-                            class="form-card__item">
-                        <span class="form-card__pseudo-item"></span>
-                    </label>
-                </form>
+                <div class="card__description">
+                    <h2 class="card__title">Карачаево-Черкесия</h2>
+                    <button type="button" name="like" class="card__button">
+                </div>
             </div>
         </section>
-        
-        <div class="popup popup_opened">
-            <form class="popup__container">
-                <div class="popup__toggle">
-                    <img class="popup__toggle-image" src="./images/Close_Icon.png" alt="">
-                </div>
-                <h2 class="popup__title">Редактировать профиль</h2>
-                <input type="text" placeholder="Жак-Ив Кусто" required class="popup__item">
-                <input type="text" placeholder="Исследователь океана" required class="popup__item">
-                <button type="submit" class="popup__button">Сохранить</button>
-            </form>
-        </div>
     </main>
     <footer class="footer">
         <p class="footer__text">&#169; 2020 Mesto Russia</p>
     </footer>
+    <div class="popup">
+        <div class="popup__container">
+            <button class="popup__toggle"></button>
+            <form class="form" name="form">
+                <h2 class="form__title">Редактировать профиль</h2>
+                <input type="text" placeholder="Имя пользователя" name="user-name" required class="form__item">
+                <input type="text" placeholder="Род деятельности" name="description" required class="form__item">
+                <button type="submit" class="form__button">Сохранить</button>
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>

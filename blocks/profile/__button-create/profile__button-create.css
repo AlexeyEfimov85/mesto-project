@@ -1,26 +1,26 @@
 .profile__button-create {
     width: 150px;
     height: 50px;
-    background-color: black;
+    background-color: rgba(255, 255, 255, 0);
     font-size: 0;
     border: none;
     margin: 0;
     padding: 0;
-    background-image: url("../../../images/Add_Button.png");
+    background-image: url("../../../images/Add_Button.svg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-        
+    cursor: pointer;
 }
 
 .profile__button-create:hover {
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 @media screen and (max-width: 555px) {
     .profile__button-create {
         width: 88%;
         margin: auto;
-        background-image: url("../../../images/Add_Button-small_screen.png");
+        background-image: url("../../../images/Add_Button-small_screen.svg");
     }
 }
