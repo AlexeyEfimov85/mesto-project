@@ -9,7 +9,7 @@
     line-height: 1.21;
     text-overflow: ellipsis;
     white-space: nowrap;
-    overflow: hidden;
+    overflow: hidden; /*вот здесь применены свойства чтобы не переполнялись поля, у меня верстка не ломается*/
 }
 
 .form__itemt::-webkit-input-placeholder {
