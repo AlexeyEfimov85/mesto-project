@@ -1,7 +1,6 @@
 @import url("../vendor/normalize.css");
 @import url("../vendor/fonts.css");
 @import url("../blocks/root/root.css");
-@import url("../blocks/wrapper-flex/wrapper-flex.css");
 @import url("../blocks/header/header.css");
 @import url("../blocks/logo/logo.css");
 @import url("../blocks/footer/footer.css");
@@ -13,6 +12,7 @@
 @import url("../blocks/card/__title/card__title.css");
 @import url("../blocks/card/__button/card__button.css");
 @import url("../blocks/profile/profile.css");
+@import url("../blocks/profile/__text-wrapper/profile__text-wrapper.css");
 @import url("../blocks/profile/__text/profile__text.css");
 @import url("../blocks/profile/__info/profile__info.css");
 @import url("../blocks/profile/__title/profile__title.css");
@@ -27,4 +27,4 @@
 @import url("../blocks/form/__title/form__title.css");
 @import url("../blocks/form/__item/form__item.css");
 @import url("../blocks/form/__button/form__button.css");
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap');
+

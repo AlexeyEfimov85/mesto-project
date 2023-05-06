@@ -2,7 +2,7 @@
     width: 24px;
     height: 24px;
     margin: 5px 0 0 18px;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0);
     background-image: url("../../../images/Edit_Button.svg");
     background-repeat: no-repeat;
     background-position: center;
