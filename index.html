@@ -28,7 +28,7 @@
             <button type="button" class="profile__button-create"></button>
         </section>
         <section class="places">
-            <div class="card">
+            <!--<div class="card">
                 <img src="./images/karachaevsk.jpg" alt="фотография церкви" class="card__image">
                 <div class="card__description">
                     <h2 class="card__title">Карачаевск</h2>
@@ -69,7 +69,7 @@
                     <h2 class="card__title">Карачаево-Черкесия</h2>
                     <button type="button" name="like" class="card__button"></button>
                 </div>
-            </div>
+            </div>-->
         </section>
     </main>
     <footer class="footer">
@@ -78,14 +78,43 @@
     <div class="popup">
         <div class="popup__container">
             <button type="button" class="popup__toggle"></button>
-            <form class="form" name="form">
+            <form class="form" name="form" id="form-profile">
                 <h2 class="form__title">Редактировать профиль</h2>
-                <input type="text" placeholder="Имя пользователя" name="user-name" required class="form__item">
-                <input type="text" placeholder="Род деятельности" name="description" required class="form__item">
+                <input type="text" placeholder="Имя пользователя" name="user-name" required class="form__item" id="user-name">
+                <input type="text" placeholder="Род деятельности" name="user-job" required class="form__item" id="user-job">
                 <button type="submit" class="form__button">Сохранить</button>
             </form>
         </div>
     </div>
+    <div class="popup" id="popup-place">
+        <div class="popup__container">
+            <button type="button" class="popup__toggle" id="popup-place-toggle"></button>
+            <form class="form" name="form" id="form-place">
+                <h2 class="form__title">Новое место</h2>
+                <input type="text" placeholder="Название" name="place-name" required class="form__item" id="place-title">
+                <input type="text" placeholder="Ссылка" name="link" required class="form__item" id="place-link">
+                <button type="submit" class="form__button">Создать</button>
+            </form>
+        </div>
+    </div>
+    <div class="popup" id="popup-place-full">
+        <div class="popup__container_place-full">
+            <button type="button" class="popup__toggle" id="popup-place-toggle"></button>
+            <img src="" alt="" class="popup__image" id = "card-image">
+            <h2 class="popup__image-title"></h2>
+        </div>
+    </div>
+    <template id="card">
+        <div class="card">
+            <img src="" alt="" class="card__image">
+            <div class="card__description">
+                <h2 class="card__title"></h2>
+                <button type="button" name="like" class="card__button"></button>
+            </div>
+            <button type="button" name="trash" class="card__trash"></button>
+        </div>
+    </template>
+    <script src="script.js"></script>
 </body>
 
 </html>
