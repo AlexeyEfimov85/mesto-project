@@ -57,9 +57,9 @@ function initialCard() {
 }
 initialCard();
 // модальное окно добавления места
-let buttonCreate = document.querySelector('.profile__button-create');
-let popupCreate = document.querySelector('#popup-place');
-let buttonPlaceToggle = document.querySelector('#popup-place-toggle')
+const buttonCreate = document.querySelector('.profile__button-create');
+const popupCreate = document.querySelector('#popup-place');
+const buttonPlaceToggle = document.querySelector('#popup-place-toggle')
 function placeCreate() {
     popupCreate.classList.toggle('popup_opened');
 }
@@ -103,9 +103,9 @@ formElementPlace.addEventListener('submit', formPlaceSubmitHandler);
 
 // удаление карточек первоначальных карточек (почему то не работает для добавленных)
 function cardDelete() {
-    let cardDeleteButton = document.querySelectorAll('.card__trash');
+    const cardDeleteButton = document.querySelectorAll('.card__trash');
     cardDeleteButton.forEach(function (item) {
-        let cardItem = item.closest('.card');
+        const cardItem = item.closest('.card');
         item.addEventListener('click', function () {
             cardItem.remove();
         })
@@ -114,9 +114,9 @@ function cardDelete() {
 cardDelete();
 
 //редактирование данных пользователя
-let buttonEdit = document.querySelector('.profile__button-edit');
-let popup = document.querySelector('.popup');
-let buttonToggle = document.querySelector('.popup__toggle');
+const buttonEdit = document.querySelector('.profile__button-edit');
+const popup = document.querySelector('.popup');
+const buttonToggle = document.querySelector('.popup__toggle');
 function edit() {
     popup.classList.toggle('popup_opened');
 };
@@ -139,7 +139,7 @@ formElement.addEventListener('submit', formSubmitHandler);
 //закрытие попапа с фотографиями
 function popupPlaceFullClose() {
     const popupPlaceFull = document.querySelector('#popup-place-full');
-    let buttonPlaceFullToggle = popupPlaceFull.querySelectorAll('.popup__toggle');
+    const buttonPlaceFullToggle = popupPlaceFull.querySelectorAll('.popup__toggle');
     buttonPlaceFullToggle.forEach(function (item) {
         item.addEventListener('click', function () {
             popupPlaceFull.classList.toggle('popup_opened-place');
