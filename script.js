@@ -93,6 +93,8 @@ function formPlaceSubmitHandler(evt) {
     evt.preventDefault();
     addCard(placeTitleInput.value, placeLinkInput.value);
     placeCreate();
+    placeTitleInput.value = '';
+    placeLinkInput.value = '';
 }
 
 formElementPlace.addEventListener('submit', formPlaceSubmitHandler);
@@ -128,6 +130,8 @@ function formSubmitHandler(evt) {
     document.querySelector('.profile__title').textContent = nameInput.value;
     document.querySelector('.profile__description').textContent = jobInput.value;
     edit();
+    nameInput.value = document.querySelector('.profile__title').textContent;
+    jobInput.value = document.querySelector('.profile__description').textContent;
 }
 formElement.addEventListener('submit', formSubmitHandler);
 //закрытие попапа с фотографиями
