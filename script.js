@@ -34,6 +34,7 @@ function initialCard() {
         const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
         cardElement.querySelector('.card__image').src = initialCards[i].link;
         cardElement.querySelector('.card__title').textContent = initialCards[i].name;
+        cardElement.querySelector('.card__image').alt = initialCards[i].name;
         cardElements[i] = cardElement;
         cardElement.querySelector('.card__button').addEventListener('click', function (evt) {
             evt.target.classList.toggle('card__button_checked');
@@ -72,6 +73,7 @@ function addCard(cardTitleInput, cardImageInput) {
     const popupPlaceFull = document.querySelector('#popup-place-full');
     cardElementUserAdd.querySelector('.card__image').src = cardImageInput;
     cardElementUserAdd.querySelector('.card__title').textContent = cardTitleInput;
+    cardElementUserAdd.querySelector('.card__image').alt = cardTitleInput;
     cardContainerUserAdd.prepend(cardElementUserAdd);
     cardElementUserAdd.querySelector('.card__button').addEventListener('click', function (evt) {
         evt.target.classList.toggle('card__button_checked');
