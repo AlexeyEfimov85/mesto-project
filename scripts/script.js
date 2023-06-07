@@ -39,8 +39,11 @@ function initialCard() {
         cardElement.querySelector('.card__button').addEventListener('click', function (evt) {
             evt.target.classList.toggle('card__button_checked');
         });
+        
         const popupPlaceFull = document.querySelector('#popup-place-full');
-
+        cardElement.querySelector('.card__trash').addEventListener('click', function (evt) {
+            evt.target.closest('.card').remove();
+        });
         cardElement.querySelector('.card__image').addEventListener('click', function () {
             popupPlaceFull.classList.toggle('popup_opened-place');
             popupPlaceFull.querySelector('#card-image').src = cardElement.querySelector('.card__image').src;
@@ -57,24 +60,25 @@ function initialCard() {
 }
 initialCard();
 // модальное окно добавления места
-const buttonCreate = document.querySelector('.profile__button-create');
-const popupCreate = document.querySelector('#popup-place');
-const buttonPlaceToggle = document.querySelector('#popup-place-toggle')
+const buttonOpenPopupCreateCard = document.querySelector('.profile__button-create');
+const popupCreateNewCard = document.querySelector('#popup-place');
+const buttonClosePopupCreateNewCard = document.querySelector('.popup__toggle_create-new-card')
 function placeCreate() {
-    popupCreate.classList.toggle('popup_opened');
+    popupCreateNewCard.classList.toggle('popup_opened');
 }
-buttonCreate.addEventListener('click', placeCreate);
-buttonPlaceToggle.addEventListener('click', placeCreate);
+buttonOpenPopupCreateCard.addEventListener('click', placeCreate);
+buttonClosePopupCreateNewCard.addEventListener('click', placeCreate);
 // добавление карточек и удаление добавленных карточек
-function addCard(cardTitleInput, cardImageInput) {
-    const cardContainerUserAdd = document.querySelector('.places');
+const cardContainerUserAdd = document.querySelector('.places');
+let cardElementUserAdd = {}; //здесь точно нужно через let
+function createCard(cardTitleInput, cardImageInput) {
     const cardTemplateUserAdd = document.querySelector('#card').content;
-    const cardElementUserAdd = cardTemplateUserAdd.querySelector('.card').cloneNode(true);
+    cardElementUserAdd = cardTemplateUserAdd.querySelector('.card').cloneNode(true);
     const popupPlaceFull = document.querySelector('#popup-place-full');
     cardElementUserAdd.querySelector('.card__image').src = cardImageInput;
     cardElementUserAdd.querySelector('.card__title').textContent = cardTitleInput;
     cardElementUserAdd.querySelector('.card__image').alt = cardTitleInput;
-    cardContainerUserAdd.prepend(cardElementUserAdd);
+    //cardContainerUserAdd.prepend(cardElementUserAdd);
     cardElementUserAdd.querySelector('.card__button').addEventListener('click', function (evt) {
         evt.target.classList.toggle('card__button_checked');
     });
@@ -86,32 +90,26 @@ function addCard(cardTitleInput, cardImageInput) {
         popupPlaceFull.querySelector('#card-image').src = cardElementUserAdd.querySelector('.card__image').src;
         popupPlaceFull.querySelector('.popup__image-title').textContent = cardElementUserAdd.querySelector('.card__title').textContent;
     });
+    return cardElementUserAdd;
 }
 
 const formElementPlace = document.querySelector('#form-place');
 const placeTitleInput = document.querySelector('#place-title');
 const placeLinkInput = document.querySelector('#place-link');
+function renderCard() {
+    createCard(placeTitleInput.value, placeLinkInput.value);
+    cardContainerUserAdd.prepend(cardElementUserAdd);
+}
 function formPlaceSubmitHandler(evt) {
     evt.preventDefault();
-    addCard(placeTitleInput.value, placeLinkInput.value);
+    renderCard();
     placeCreate();
     placeTitleInput.value = '';
     placeLinkInput.value = '';
 }
-
 formElementPlace.addEventListener('submit', formPlaceSubmitHandler);
 
-// удаление карточек первоначальных карточек (почему то не работает для добавленных)
-function cardDelete() {
-    const cardDeleteButton = document.querySelectorAll('.card__trash');
-    cardDeleteButton.forEach(function (item) {
-        const cardItem = item.closest('.card');
-        item.addEventListener('click', function () {
-            cardItem.remove();
-        })
-    });
-};
-cardDelete();
+
 
 //редактирование данных пользователя
 const buttonEdit = document.querySelector('.profile__button-edit');

@@ -88,11 +88,11 @@
     </div>
     <div class="popup" id="popup-place">
         <div class="popup__container">
-            <button type="button" class="popup__toggle" id="popup-place-toggle"></button>
+            <button type="button" class="popup__toggle popup__toggle_create-new-card"></button>
             <form class="form" name="form" id="form-place">
                 <h2 class="form__title">Новое место</h2>
                 <input type="text" placeholder="Название" name="place-name" required class="form__item" id="place-title">
-                <input type="text" placeholder="Ссылка" name="link" required class="form__item" id="place-link">
+                <input type="url" placeholder="Ссылка" name="link" required class="form__item" id="place-link">
                 <button type="submit" class="form__button">Создать</button>
             </form>
         </div>
@@ -114,7 +114,7 @@
             <button type="button" name="trash" class="card__trash"></button>
         </div>
     </template>
-    <script src="script.js"></script>
+    <script src="scripts/script.js"></script>
 </body>
 
 </html>
