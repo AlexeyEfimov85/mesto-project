@@ -109,17 +109,23 @@ function formPlaceSubmitHandler(evt) {
 }
 formElementPlace.addEventListener('submit', formPlaceSubmitHandler);
 
-
-
 //редактирование данных пользователя
 const buttonEdit = document.querySelector('.profile__button-edit');
-const popup = document.querySelector('.popup');
-const buttonToggle = document.querySelector('.popup__toggle');
-function edit() {
-    popup.classList.toggle('popup_opened');
+const popupProfile = document.querySelector('#popup-edit-profile');
+const buttonToggle = popupProfile.querySelector('.popup__toggle');
+function open(popup) {
+    popup.classList.add('popup_opened');
 };
-buttonEdit.addEventListener('click', edit);
-buttonToggle.addEventListener('click', edit);
+function close(popup) {
+    popup.classList.remove('popup_opened');
+};
+buttonEdit.addEventListener('click', function() {
+    open(popupProfile);
+});
+buttonToggle.addEventListener('click', function() {
+    close(popupProfile);
+});
+
 const formElement = document.querySelector('#form-profile');
 const nameInput = formElement.querySelector('#user-name');
 const jobInput = formElement.querySelector('#user-job');
@@ -129,7 +135,7 @@ function formSubmitHandler(evt) {
     evt.preventDefault();
     document.querySelector('.profile__title').textContent = nameInput.value;
     document.querySelector('.profile__description').textContent = jobInput.value;
-    edit();
+    close(popupProfile);
     nameInput.value = document.querySelector('.profile__title').textContent;
     jobInput.value = document.querySelector('.profile__description').textContent;
 }
