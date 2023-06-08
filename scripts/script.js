@@ -128,7 +128,7 @@ function renderCard() {
 function formPlaceSubmitHandler(evt) {
     evt.preventDefault();
     renderCard();
-    placeCreate();
+    closePopup(popupCreateNewCard);
     placeTitleInput.value = '';
     placeLinkInput.value = '';
 }
