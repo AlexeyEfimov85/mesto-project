@@ -116,17 +116,11 @@ function createCard(cardTitleInput, cardImageInput) {
     cardElementUserAdd.querySelector('.card__image').addEventListener('click', function (evt) {
 
         openPopup(popupPlaceFull);
-        /*popupPlaceFull.querySelector('#card-image').src = cardElementUserAdd.querySelector('.card__image').src;
-        popupPlaceFull.querySelector('.popup__image-title').textContent = cardElementUserAdd.querySelector('.card__title').textContent;*/ //этот код перестал работать после удаления функции initialCards и загрузки карточек через цикл
-        /*popupPlaceFull.querySelector('#card-image').src = evt.target.src;
-        popupPlaceFull.querySelector('.popup__image-title').textContent = evt.target.alt;
-        popupPlaceFull.querySelector('#card-image').alt  = evt.target.alt;*/
         popupPlaceFullImage.src = evt.target.src;
         popupPlaceFullTitle.textContent = evt.target.alt;
         popupPlaceFullImage.alt = evt.target.alt;
 
     });
-
     return cardElementUserAdd;
 }
 
@@ -151,13 +145,7 @@ function openPopup(popup) {
 function closePopup(popup) {
     popup.classList.remove('popup_opened');
 };
-/*function openPopupProfileEdit(popup) {
-    popup.classList.add('popup_opened');
 
-};
-function closePopupProfileEdit(popup) {
-    popup.classList.remove('popup_opened');
-};*/
 
 
 
