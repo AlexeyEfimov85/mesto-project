@@ -1,4 +1,4 @@
-const profileTitle = document.querySelector('.profile__title'); 
+const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const cardContainer = document.querySelector('.places');
 const cardContainerUserAdd = document.querySelector('.places');
@@ -17,6 +17,10 @@ const nameInput = formProfileEdit.querySelector('#user-name');
 const jobInput = formProfileEdit.querySelector('#user-job');
 const popupPlaceFull = document.querySelector('#popup-place-full');
 const buttonPlaceFullToggle = popupPlaceFull.querySelector('.popup__toggle');
+const popupPlaceFullImage = popupPlaceFull.querySelector('#card-image');
+const popupPlaceFullTitle = popupPlaceFull.querySelector('.popup__image-title');
+
+
 const initialCards = [
     {
         name: 'Архыз',
@@ -101,6 +105,7 @@ function createCard(cardTitleInput, cardImageInput) {
     cardElementUserAdd.querySelector('.card__image').src = cardImageInput;
     cardElementUserAdd.querySelector('.card__title').textContent = cardTitleInput;
     cardElementUserAdd.querySelector('.card__image').alt = cardTitleInput;
+
     //cardContainerUserAdd.prepend(cardElementUserAdd);
     cardElementUserAdd.querySelector('.card__button').addEventListener('click', function (evt) {
         evt.target.classList.toggle('card__button_checked');
@@ -109,11 +114,16 @@ function createCard(cardTitleInput, cardImageInput) {
         evt.target.closest('.card').remove();
     });
     cardElementUserAdd.querySelector('.card__image').addEventListener('click', function (evt) {
+
         openPopup(popupPlaceFull);
         /*popupPlaceFull.querySelector('#card-image').src = cardElementUserAdd.querySelector('.card__image').src;
         popupPlaceFull.querySelector('.popup__image-title').textContent = cardElementUserAdd.querySelector('.card__title').textContent;*/ //этот код перестал работать после удаления функции initialCards и загрузки карточек через цикл
-        popupPlaceFull.querySelector('#card-image').src = evt.target.src;
+        /*popupPlaceFull.querySelector('#card-image').src = evt.target.src;
         popupPlaceFull.querySelector('.popup__image-title').textContent = evt.target.alt;
+        popupPlaceFull.querySelector('#card-image').alt  = evt.target.alt;*/
+        popupPlaceFullImage.src = evt.target.src;
+        popupPlaceFullTitle.textContent = evt.target.alt;
+        popupPlaceFullImage.alt = evt.target.alt;
 
     });
 
@@ -141,14 +151,13 @@ function openPopup(popup) {
 function closePopup(popup) {
     popup.classList.remove('popup_opened');
 };
-function openPopupProfileEdit(popup) {
+/*function openPopupProfileEdit(popup) {
     popup.classList.add('popup_opened');
-    addformProfileEditNamePlaceholder();
-    addformProfileEditJobPlaceholder();
+
 };
 function closePopupProfileEdit(popup) {
     popup.classList.remove('popup_opened');
-};
+};*/
 
 
 
@@ -181,21 +190,23 @@ function formProfileEditSubmitHandler(evt) {
 };
 popupPlaceFullClose();*/
 
-buttonPlaceFullToggle.addEventListener('click', function() {
+buttonPlaceFullToggle.addEventListener('click', function () {
     closePopup(popupPlaceFull);
 });
 
-buttonOpenPopupCreateCard.addEventListener('click', function() {
+buttonOpenPopupCreateCard.addEventListener('click', function () {
     openPopup(popupCreateNewCard);
 });
-buttonClosePopupCreateNewCard.addEventListener('click', function() {
+buttonClosePopupCreateNewCard.addEventListener('click', function () {
     closePopup(popupCreateNewCard);
 });
-buttonEdit.addEventListener('click', function() {
-    openPopupProfileEdit(popupProfile);
+buttonEdit.addEventListener('click', function () {
+    openPopup(popupProfile);
+    addformProfileEditNamePlaceholder();
+    addformProfileEditJobPlaceholder();
 });
-buttonPopupProfileToggle.addEventListener('click', function() {
-    closePopupProfileEdit(popupProfile);
+buttonPopupProfileToggle.addEventListener('click', function () {
+    closePopup(popupProfile);
 });
 formProfileEdit.addEventListener('submit', formProfileEditSubmitHandler);
 formElementPlace.addEventListener('submit', formPlaceSubmitHandler);
