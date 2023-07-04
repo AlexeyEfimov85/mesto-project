@@ -8,6 +8,7 @@
 @import url("../blocks/places/places.css");
 @import url("../blocks/card/card.css");
 @import url("../blocks/card/__image/card__image.css");
+@import url("../blocks/card/__image-container/card__image-container.css");
 @import url("../blocks/card/__description/card__description.css");
 @import url("../blocks/card/__title/card__title.css");
 @import url("../blocks/card/__button/card__button.css");
@@ -26,6 +27,7 @@
 @import url("../blocks/popup/__toggle/popup__toggle.css");
 @import url("../blocks/popup/_opened/popup_opened.css");
 @import url("../blocks/popup/_opened/popup_opened-place.css");
+@import url("../blocks/popup/_dark-overlay/popup_dark-overlay.css");
 @import url("../blocks/popup/__image/popup__image.css");
 @import url("../blocks/popup/__container/_place-full/popup__container_place-full.css");
 @import url("../blocks/popup/__image-title/popup__image-title.css");

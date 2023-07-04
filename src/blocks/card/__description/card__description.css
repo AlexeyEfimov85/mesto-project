@@ -1,5 +1,6 @@
 .card__description {
-    display: flex;
+    display: grid;
+    grid-template-columns: 5fr 1fr;
     justify-content: space-between;
     align-items: center;
     max-width: 82.5%;

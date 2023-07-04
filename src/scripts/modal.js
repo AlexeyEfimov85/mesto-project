@@ -1,3 +1,4 @@
+//import { popupPlaceFull } from "./scripts/cards.js";
 export const formProfileEdit = document.querySelector('#form-profile');
 export const popupCreateNewCard = document.querySelector('#popup-place');
 export const popupProfile = document.querySelector('#popup-edit-profile');
@@ -8,40 +9,28 @@ export const buttonEdit = document.querySelector('.profile__button-edit');
 export const buttonPopupProfileToggle = popupProfile.querySelector('.popup__toggle');
 export const popupPlaceFull = document.querySelector('#popup-place-full');
 export const buttonPlaceFullToggle = popupPlaceFull.querySelector('.popup__toggle');
-const profileTitle = document.querySelector('.profile__title');
-const profileDescription = document.querySelector('.profile__description');
-const nameInput = formProfileEdit.querySelector('#form__item-username');
-const jobInput = formProfileEdit.querySelector('#form__item-userjob');
+export const nameInput = formProfileEdit.querySelector('#form__item-username');
+export const jobInput = formProfileEdit.querySelector('#form__item-userjob');
 
-import { renderCard, placeTitleInput, placeLinkInput } from "./cards";
 export function openPopup(popup) {
     popup.classList.add('popup_opened');
+    document.addEventListener('keydown', closeByEsc);
 };
 
 export function closePopup(popup) {
     popup.classList.remove('popup_opened');
 };
 
-export function formPlaceSubmitHandler(evt) {
-    evt.preventDefault();
-    renderCard();
-    closePopup(popupCreateNewCard);
-    placeTitleInput.value = '';
-    placeLinkInput.value = '';
-}
-
-export function addformProfileEditNamePlaceholder() {
-    nameInput.value = document.querySelector('.profile__title').textContent;
-};
-export function addformProfileEditJobPlaceholder() {
-    jobInput.value = document.querySelector('.profile__description').textContent;
+const closeByEsc = function (evt) {
+    const popup = document.querySelector('.popup_opened');
+    if (evt.key === 'Escape') {
+        closePopup(popup);
+    }
+    document.removeEventListener('keydown', closeByEsc);
 };
 
-export function formProfileEditSubmitHandler(evt) {
-    evt.preventDefault();
-    profileTitle.textContent = nameInput.value;
-    profileDescription.textContent = jobInput.value;
-    closePopup(popupProfile);
-    nameInput.value = profileTitle.textContent;
-    jobInput.value = profileDescription.textContent;
-}
+export const closeByClickOverlay = function (evt) {
+    if (evt.target.classList.contains('popup')) {
+        closePopup(popupPlaceFull);
+    }
+};

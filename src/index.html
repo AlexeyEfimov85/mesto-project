@@ -75,7 +75,7 @@
             </form>
         </div>
     </div>
-    <div class="popup" id="popup-place-full">
+    <div class="popup popup_dark-overlay" id="popup-place-full">
         <div class="popup__container_place-full">
             <button type="button" class="popup__toggle"></button>
             <img src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" alt="Архыз"
@@ -85,7 +85,9 @@
     </div>
     <template id="card">
         <div class="card">
+            <div class="card__image-container"><!--что бы не ломалась верстка при неправильной ссылке-->
             <img src="" alt="" class="card__image">
+            </div>
             <div class="card__description">
                 <h2 class="card__title"></h2>
                 <button type="button" name="like" class="card__button"></button>
