@@ -1,4 +1,4 @@
-let cardElementUserAdd = []; // используется в функции renderCard() как массив с карточками в текущем состоянии - после добавлений и удалений
+// let cardElementUserAdd = []; // используется в функции renderCard() как массив с карточками в текущем состоянии - после добавлений и удалений
 export const popupPlaceFull = document.querySelector('#popup-place-full');
 export const popupPlaceFullImage = popupPlaceFull.querySelector('#card-image');
 export const popupPlaceFullTitle = popupPlaceFull.querySelector('.popup__image-title');
@@ -35,7 +35,7 @@ import { openPopup } from "./modal";
 
 export const createCard = (cardTitleInput, cardImageInput) => {
     const cardTemplateUserAdd = document.querySelector('#card').content;
-    cardElementUserAdd = cardTemplateUserAdd.querySelector('.card').cloneNode(true);
+    const cardElementUserAdd = cardTemplateUserAdd.querySelector('.card').cloneNode(true);
     cardElementUserAdd.querySelector('.card__image').src = cardImageInput;
     cardElementUserAdd.querySelector('.card__title').textContent = cardTitleInput;
     cardElementUserAdd.querySelector('.card__image').alt = cardTitleInput;
@@ -55,13 +55,15 @@ export const createCard = (cardTitleInput, cardImageInput) => {
         popupPlaceFullImage.alt = evt.target.alt;
 
     });
+    
     return cardElementUserAdd;
-
+   
 }
 
 export function renderCard() {
+    const cards = createCard(placeTitleInput.value, placeLinkInput.value);
     createCard(placeTitleInput.value, placeLinkInput.value);
-    cardContainerUserAdd.prepend(cardElementUserAdd);
+    cardContainerUserAdd.prepend(cards);
 }
 
 

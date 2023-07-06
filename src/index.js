@@ -1,8 +1,8 @@
 import './pages/index.css';
-
+import {formProfileEdit} from './scripts/util.js'
 import { initialCards, createCard, renderCard, cardContainerUserAdd, placeTitleInput, placeLinkInput } from "./scripts/cards.js";
 import {
-    openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, formProfileEdit, popupProfile, 
+    openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile, 
     buttonOpenPopupCreateCard, buttonClosePopupCreateNewCard, formElementPlace, buttonEdit, buttonPopupProfileToggle, 
     popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay
 } from './scripts/modal';
@@ -31,10 +31,10 @@ function addNewPlaceSubmitHandler(evt) {
     placeLinkInput.value = '';
 }
 
-function addformProfileEditNamePlaceholder() {
+function addformProfileEditNamePlaceholderValue() {
     nameInput.value = document.querySelector('.profile__title').textContent;
 };
-function addformProfileEditJobPlaceholder() {
+function addformProfileEditJobPlaceholderValue() {
     jobInput.value = document.querySelector('.profile__description').textContent;
 };
 
@@ -59,8 +59,8 @@ popupCreateNewCard.addEventListener('click', function (evt) {
 
 buttonEdit.addEventListener('click', function () {
     openPopup(popupProfile);
-    addformProfileEditNamePlaceholder();
-    addformProfileEditJobPlaceholder();
+    addformProfileEditNamePlaceholderValue();
+    addformProfileEditJobPlaceholderValue();
 });
 buttonPopupProfileToggle.addEventListener('click', function () {
     closePopup(popupProfile);
@@ -74,5 +74,6 @@ formProfileEdit.addEventListener('submit', addProfileInfoSubmitHandler);
 formElementPlace.addEventListener('submit', addNewPlaceSubmitHandler);
 
 enableValidation(objTuneValidation); 
+
 
 

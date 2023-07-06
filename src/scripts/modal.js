@@ -1,4 +1,4 @@
-//import { popupPlaceFull } from "./scripts/cards.js";
+//import { formProfileEdit } from "./util.js";
 export const formProfileEdit = document.querySelector('#form-profile');
 export const popupCreateNewCard = document.querySelector('#popup-place');
 export const popupProfile = document.querySelector('#popup-edit-profile');
@@ -9,8 +9,8 @@ export const buttonEdit = document.querySelector('.profile__button-edit');
 export const buttonPopupProfileToggle = popupProfile.querySelector('.popup__toggle');
 export const popupPlaceFull = document.querySelector('#popup-place-full');
 export const buttonPlaceFullToggle = popupPlaceFull.querySelector('.popup__toggle');
-export const nameInput = formProfileEdit.querySelector('#form__item-username');
-export const jobInput = formProfileEdit.querySelector('#form__item-userjob');
+export const nameInput = document.forms.formProfile.querySelector('#form__item-username');
+export const jobInput = document.forms.formProfile.querySelector('#form__item-userjob');
 
 export function openPopup(popup) {
     popup.classList.add('popup_opened');
@@ -19,14 +19,16 @@ export function openPopup(popup) {
 
 export function closePopup(popup) {
     popup.classList.remove('popup_opened');
+    document.removeEventListener('keydown', closeByEsc);
 };
 
 const closeByEsc = function (evt) {
-    const popup = document.querySelector('.popup_opened');
+    
     if (evt.key === 'Escape') {
+        const popup = document.querySelector('.popup_opened');
         closePopup(popup);
     }
-    document.removeEventListener('keydown', closeByEsc);
+    //document.removeEventListener('keydown', closeByEsc);
 };
 
 export const closeByClickOverlay = function (evt) {
