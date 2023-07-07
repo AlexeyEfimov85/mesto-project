@@ -31,10 +31,10 @@ function addNewPlaceSubmitHandler(evt) {
     placeLinkInput.value = '';
 }
 
-function addformProfileEditNamePlaceholderValue() {
+function addNameInputValue() {
     nameInput.value = document.querySelector('.profile__title').textContent;
 };
-function addformProfileEditJobPlaceholderValue() {
+function addJobInputValue() {
     jobInput.value = document.querySelector('.profile__description').textContent;
 };
 
@@ -59,8 +59,8 @@ popupCreateNewCard.addEventListener('click', function (evt) {
 
 buttonEdit.addEventListener('click', function () {
     openPopup(popupProfile);
-    addformProfileEditNamePlaceholderValue();
-    addformProfileEditJobPlaceholderValue();
+    addNameInputValue();
+    addJobInputValue();
 });
 buttonPopupProfileToggle.addEventListener('click', function () {
     closePopup(popupProfile);
