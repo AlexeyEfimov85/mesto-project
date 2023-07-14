@@ -1,6 +1,5 @@
 import { cardContainerUserAdd, createCard } from "./cards";
-import { nameInput, jobInput } from "./modal";
-export let userID = '';
+import { userID } from "../index.js";
 export function getCards() {
   return fetch('https://nomoreparties.co/v1/plus-cohort-26/cards', {
     headers: {
@@ -17,40 +16,18 @@ export function getCards() {
       initialCards.forEach(item => {
         const arr = item.likes;
         const newArr = arr.map(userid => {
-                 return userid._id;
+          return userid._id;
         })
         const newNewArr = newArr.some(myId => {
-          return myId === '509490c5246b53b1359effd9'
+          return myId === userID
         })
-        //console.log(item.likes);
-        //console.log(newNewArr);
         cardContainerUserAdd.append(createCard(item.name, item.link, item.likes.length, item.owner._id, item._id, newNewArr));
-    })})
-    
-}
-
-
-/*export function getlikesID() {return fetch('https://nomoreparties.co/v1/plus-cohort-26/cards ', {
-  headers: {
-    authorization: 'dff808ff-3720-4dec-bd88-6c3aa62f954a'
-  }
-})
-  .then(res => {
-    if (!res.ok) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
-  }).then((initialCards) => {
-    initialCards.forEach(item => {
-      const arr = item.likes;
-      arr.forEach(userid => {
-        //console.log(userid._id);
-        array = userid._id;
       })
+    }).catch((err) => {
+      console.log(err);
     });
-  });
-};*/
 
+}
 export function renderCard() {
   return fetch('https://nomoreparties.co/v1/plus-cohort-26/cards', {
     headers: {
@@ -62,8 +39,10 @@ export function renderCard() {
         return Promise.reject(`Ошибка: ${res.status}`);
       }
       return res.json();
-    })
-  };
+    }).catch((err) => {
+      console.log(err);
+    });
+};
 
 export function getProfileData() {
   return fetch('https://nomoreparties.co/v1/plus-cohort-26/users/me', {
@@ -81,9 +60,9 @@ export function getProfileData() {
       document.querySelector('.profile__title').textContent = profileData.name;
       document.querySelector('.profile__description').textContent = profileData.about
       document.querySelector('.profile__avatar').src = profileData.avatar;
-      userID = profileData._id;
-      console.log(userID);
-     
+      return profileData;
+    }).catch((err) => {
+      console.log(err);
     });
 };
 
@@ -105,6 +84,8 @@ export function renderProfileData(profileData) {
     document.querySelector('.profile__title').textContent = profileData.name;
     document.querySelector('.profile__description').textContent = profileData.about
     document.querySelector('.profile__avatar').src = profileData.avatar;
+  }).catch((err) => {
+    console.log(err);
   });
 }
 
@@ -125,6 +106,8 @@ export function addCardToServer(cardData) {
   })
     .then((cardData) => {
       cardContainerUserAdd.prepend(createCard(cardData.name, cardData.link, cardData.likes.length, cardData.owner._id, cardData._id));
+    }).catch((err) => {
+      console.log(err);
     });
 }
 
@@ -142,7 +125,9 @@ export function sendLike(id) {
       return Promise.reject(`Ошибка: ${res.status}`);
     }
     return res.json();
-  })
+  }).catch((err) => {
+    console.log(err);
+  });
 }
 
 export function deleteLike(id) {
@@ -158,7 +143,9 @@ export function deleteLike(id) {
       return Promise.reject(`Ошибка: ${res.status}`);
     }
     return res.json();
-  })
+  }).catch((err) => {
+    console.log(err);
+  });
 }
 
 export function deleteCards(id) {
@@ -175,26 +162,11 @@ export function deleteCards(id) {
     }
 
     return res.json();
+  }).catch((err) => {
+    console.log(err);
   });
 };
 
-/*export function getProfileAvatar() {
-  return fetch('https://nomoreparties.co/v1/plus-cohort-26/users/me', {
-    headers: {
-      authorization: 'dff808ff-3720-4dec-bd88-6c3aa62f954a'
-    }
-  })
-    .then(res => {
-      if (!res.ok) {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-      return res.json();
-    })
-    .then((profileData) => {
-      document.querySelector('.profile__avatar').src = profileData.avatar;
-      console.log(profileData.avatar);
-    });
-};*/
 
 export function renderProfileAvatar(profileData) {
   return fetch('https://nomoreparties.co/v1/plus-cohort-26/users/me/avatar', {

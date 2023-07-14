@@ -11,6 +11,13 @@ export const popupPlaceFull = document.querySelector('#popup-place-full');
 export const buttonPlaceFullToggle = popupPlaceFull.querySelector('.popup__toggle');
 export const nameInput = document.forms.formProfile.querySelector('#form__item-username');
 export const jobInput = document.forms.formProfile.querySelector('#form__item-userjob');
+export const profileTitle = document.querySelector('.profile__title');
+export const profileDescription = document.querySelector('.profile__description');
+export const profileAvatar = document.querySelector('.profile__avatar-container');
+export const popupProfileAvatar = document.querySelector('#popup-profile-foto');
+export const buttonClosePopupProfileAvatar = document.querySelector('.popup__toggle_profile-foto');
+export const avatarInput  = document.querySelector('#form__item-avatarlink');
+export const formAvatarEdit = document.querySelector('#form-profile-foto');
 
 
 export function openPopup(popup) {

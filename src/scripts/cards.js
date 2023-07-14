@@ -4,32 +4,7 @@ export const popupPlaceFullTitle = popupPlaceFull.querySelector('.popup__image-t
 export const placeTitleInput = document.querySelector('#form__item-placetitle');
 export const placeLinkInput = document.querySelector('#form__item-placelink');
 export const cardContainerUserAdd = document.querySelector('.places');
-export const initialCards = [
-    {
-        name: 'Архыз',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-    },
-    {
-        name: 'Челябинская область',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-    },
-    {
-        name: 'Иваново',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-    },
-    {
-        name: 'Камчатка',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-    },
-    {
-        name: 'Холмогорский район',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-    },
-    {
-        name: 'Байкал',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-    }
-];
+import { userID } from "../index.js";
 import { openPopup } from "./modal";
 import { deleteCards, sendLike, deleteLike, renderCard } from "./api";
 
@@ -41,7 +16,7 @@ export const createCard = (cardTitleInput, cardImageInput, cardLikes, id, cardID
     cardElementUserAdd.querySelector('.card__title').textContent = cardTitleInput;
     cardElementUserAdd.querySelector('.card__image').alt = cardTitleInput;
     cardElementUserAdd.querySelector('.card__like-sum').textContent = cardLikes;
-    if (id === '509490c5246b53b1359effd9') {
+    if (id === userID) {
         cardTrash.classList.add('card__trash_visible');
     };
     if (likeUserID) {
@@ -50,19 +25,15 @@ export const createCard = (cardTitleInput, cardImageInput, cardLikes, id, cardID
     cardElementUserAdd.querySelector('.card__button').addEventListener('click', function (evt) {
         if (evt.target.classList.contains('card__button_checked')) {
             deleteLike(cardID)
-                .then(() => {
+                .then((res) => {
                     evt.target.classList.remove('card__button_checked');
-                }).finally(() => {
-                    cardElementUserAdd.querySelector('.card__like-sum').textContent = cardLikes - 1;
-                    cardLikes = cardLikes - 1;
+                    cardElementUserAdd.querySelector('.card__like-sum').textContent = res.likes.length;
                 })
         } else {
             sendLike(cardID)
-                .then(() => {
+                .then((res) => {
                     evt.target.classList.add('card__button_checked');
-                }).finally(() => {
-                    cardElementUserAdd.querySelector('.card__like-sum').textContent = cardLikes + 1;
-                    cardLikes = cardLikes + 1;
+                    cardElementUserAdd.querySelector('.card__like-sum').textContent = res.likes.length;
                 })
         }
 
@@ -85,11 +56,7 @@ export const createCard = (cardTitleInput, cardImageInput, cardLikes, id, cardID
 
 }
 
-/*export function renderCard() {
-    const cards = createCard(placeTitleInput.value, placeLinkInput.value);
-    createCard(placeTitleInput.value, placeLinkInput.value);
-    //cardContainerUserAdd.prepend(cards);
-}*/
+
 
 
 

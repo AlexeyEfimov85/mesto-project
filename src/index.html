@@ -15,7 +15,11 @@
     <main>
         <section class="profile">
             <div class="profile__info">
-                <img src="" alt="аватарка" class="profile__avatar">
+                <div class="profile__avatar-overlay-container">
+                    <div class="profile__avatar-container">
+                        <img src="" alt="аватарка" class="profile__avatar">
+                    </div>
+                </div>
                 <div class="profile__text">
                     <div class="profile__text-wrapper">
                         <h1 class="profile__title">Жак-Ив Кусто</h1>
@@ -51,7 +55,8 @@
                         data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы">
                     <span class="form__item-userjob-error">Вы пропустили это поле.</span>
                 </label>
-                <button type="submit" class="form__button"><span class="form__button_text_default">Сохранить</span><span class="form__button_text_loading form__button_text_invisible">Сохранение...</span></button>
+                <button type="submit" class="form__button"><span class="form__button_text_default">Сохранить</span><span
+                        class="form__button_text_loading form__button_text_invisible">Сохранение...</span></button>
             </form>
         </div>
     </div>
@@ -71,7 +76,8 @@
                         id="form__item-placelink">
                     <span class="form__item-placelink-error">Вы пропустили это поле.</span>
                 </label>
-                <button type="submit" class="form__button"><span class="form__button_text_default">Создать</span><span class="form__button_text_loading form__button_text_invisible">Создание...</span></button>
+                <button type="submit" class="form__button"><span class="form__button_text_default">Создать</span><span
+                        class="form__button_text_loading form__button_text_invisible">Создание...</span></button>
             </form>
         </div>
     </div>
@@ -85,7 +91,8 @@
                         id="form__item-avatarlink">
                     <span class="form__item-avatarlink-error">Вы пропустили это поле.</span>
                 </label>
-                <button type="submit" class="form__button"><span class="form__button_text_default">Сохранить</span><span class="form__button_text_loading form__button_text_invisible">Сохранение...</span></button>
+                <button type="submit" class="form__button"><span class="form__button_text_default">Сохранить</span><span
+                        class="form__button_text_loading form__button_text_invisible">Сохранение...</span></button>
             </form>
         </div>
     </div>
@@ -100,12 +107,14 @@
     <template id="card">
         <div class="card">
             <div class="card__image-container"><!--что бы не ломалась верстка при неправильной ссылке-->
-            <img src="" alt="" class="card__image">
+                <img src="" alt="" class="card__image">
             </div>
             <div class="card__description">
                 <h2 class="card__title"></h2>
-                <button type="button" name="like" class="card__button"></button>
-                <span class="card__like-sum">404</span>
+                <div class="card__likes">
+                    <button type="button" name="like" class="card__button"></button>
+                    <span class="card__like-sum">404</span>
+                </div>
             </div>
             <button type="button" name="trash" class="card__trash"></button>
         </div>

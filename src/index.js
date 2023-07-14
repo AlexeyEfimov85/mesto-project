@@ -1,22 +1,28 @@
 import './pages/index.css';
 import {formProfileEdit} from './scripts/util.js'
-import { initialCards, createCard, renderCard, cardContainerUserAdd, placeTitleInput, placeLinkInput, cardTrash } from "./scripts/cards.js";
+import { placeTitleInput, placeLinkInput } from "./scripts/cards.js";
 import {
     openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile, 
     buttonOpenPopupCreateCard, buttonClosePopupCreateNewCard, formElementPlace, buttonEdit, buttonPopupProfileToggle, 
-    popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading
+    popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading, profileTitle, profileDescription,
+    profileAvatar, popupProfileAvatar, buttonClosePopupProfileAvatar, avatarInput, formAvatarEdit
 } from './scripts/modal';
 import { enableValidation, objTuneValidation, setButtonState } from './scripts/validate';
-import { getCards, getProfileData, renderProfileData, addCardToServer, getCardsLikeNumber, deleteCards, sendLike, deleteLike, getlikesID, getProfileAvatar, renderProfileAvatar, userID } from './scripts/api.js';
+import { getCards, getProfileData, renderProfileData, addCardToServer, renderProfileAvatar } from './scripts/api.js';
 
 
-const profileTitle = document.querySelector('.profile__title');
-const profileDescription = document.querySelector('.profile__description');
-const profileAvatar = document.querySelector('.profile__avatar');
-const popupProfileAvatar = document.querySelector('#popup-profile-foto');
-const buttonClosePopupProfileAvatar = document.querySelector('.popup__toggle_profile-foto');
-const avatarInput  = document.querySelector('#form__item-avatarlink');
-const formAvatarEdit = document.querySelector('#form-profile-foto');
+
+
+export let userID;
+
+getProfileData()
+.then((profileData) => {
+    userID = profileData._id
+
+}).catch((err) => {
+console.log(err);
+});
+
 
 
 function addProfileAvatarSubmitHandler(evt) {
@@ -131,9 +137,9 @@ formProfileEdit.addEventListener('submit', addProfileInfoSubmitHandler);
 formElementPlace.addEventListener('submit', addNewPlaceSubmitHandler);
 formAvatarEdit.addEventListener('submit', addProfileAvatarSubmitHandler);
 
-enableValidation(objTuneValidation); 
+enableValidation(objTuneValidation);
 getCards();
-getProfileData();
+
 
 
 
