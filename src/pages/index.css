@@ -14,6 +14,7 @@
 @import url("../blocks/card/__button/card__button.css");
 @import url("../blocks/card/__button/_checked/card__button_checked.css");
 @import url("../blocks/card/__trash/card__trash.css");
+@import url("../blocks/card/__trash/_visible/card__trash_visible.css");
 @import url("../blocks/profile/profile.css");
 @import url("../blocks/profile/__text-wrapper/profile__text-wrapper.css");
 @import url("../blocks/profile/__text/profile__text.css");
@@ -22,6 +23,7 @@
 @import url("../blocks/profile/__description/profile__description.css");
 @import url("../blocks/profile/__button-edit/profile__button-edit.css");
 @import url("../blocks/profile/__button-create/profile__button-create.css");
+@import url("../blocks/profile/__avatar/profile__avatar.css");
 @import url("../blocks/popup/popup.css");
 @import url("../blocks/popup/__container/popup__container.css");
 @import url("../blocks/popup/__toggle/popup__toggle.css");
@@ -38,6 +40,7 @@
 @import url("../blocks/form/__item/form__item-userjob-error.css");
 @import url("../blocks/form/__item/form__item-placetitle-error.css");
 @import url("../blocks/form/__item/form__item-placelink-error.css");
+@import url("../blocks/form/__item/form__item-avatarlink-error.css");
 @import url("../blocks/form/__item/_type/form__item_type_error.css");
 @import url("../blocks/form/__item/_active/form__item-username-error_active.css");
 @import url("../blocks/form/__item/_active/form__item-userjob-error_active.css");
@@ -46,4 +49,6 @@
 @import url("../blocks/form/__field/form__field.css");
 @import url("../blocks/form/__button/form__button.css");
 @import url("../blocks/form/__button/_inactive/form__button_inactive.css");
+@import url("../blocks/form/__button/_text/form__button_text_visible.css");
+@import url("../blocks/form/__button/_text/form__button_text_invisible.css");
 

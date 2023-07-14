@@ -1,0 +1,11 @@
+.form__item-avatarlink-error {
+    color: #F00;
+    font-size: 12px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    height: 26px;
+    opacity: 0;
+    display: block;
+}
