@@ -1,29 +1,36 @@
 import './pages/index.css';
-import {formProfileEdit} from './scripts/util.js'
-import { placeTitleInput, placeLinkInput } from "./scripts/cards.js";
+import { formProfileEdit } from './scripts/util.js'
+import { placeTitleInput, placeLinkInput, cardContainerUserAdd, createCard } from "./scripts/cards.js";
 import {
-    openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile, 
-    buttonOpenPopupCreateCard, buttonClosePopupCreateNewCard, formElementPlace, buttonEdit, buttonPopupProfileToggle, 
+    openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile,
+    buttonOpenPopupCreateCard, buttonClosePopupCreateNewCard, formElementPlace, buttonEdit, buttonPopupProfileToggle,
     popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading, profileTitle, profileDescription,
-    profileAvatar, popupProfileAvatar, buttonClosePopupProfileAvatar, avatarInput, formAvatarEdit
+    profileAvatar, popupProfileAvatar, buttonClosePopupProfileAvatar, avatarInput, formAvatarEdit, profileAva
 } from './scripts/modal';
 import { enableValidation, objTuneValidation, setButtonState } from './scripts/validate';
 import { getCards, getProfileData, renderProfileData, addCardToServer, renderProfileAvatar } from './scripts/api.js';
-
-
-
-
 export let userID;
 
-getProfileData()
-.then((profileData) => {
-    userID = profileData._id
-
-}).catch((err) => {
-console.log(err);
-});
-
-
+Promise.all([getCards(), getProfileData()])
+    .then(([initialCards, profileData]) => {
+        profileTitle.textContent = profileData.name;
+        profileDescription.textContent = profileData.about
+        profileAva.src = profileData.avatar;
+        userID = profileData._id
+        initialCards.forEach(item => {
+            const arr = item.likes;
+            const newArr = arr.map(userid => {
+                return userid._id;
+            })
+            const newNewArr = newArr.some(myId => {
+                return myId === userID
+            })
+            cardContainerUserAdd.append(createCard(item.name, item.link, item.likes.length, item.owner._id, item._id, newNewArr));
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
 function addProfileAvatarSubmitHandler(evt) {
     evt.preventDefault();
@@ -32,13 +39,20 @@ function addProfileAvatarSubmitHandler(evt) {
         avatar: avatarInput.value
     };
     renderProfileAvatar(avatar)
-    .then (() => {
-        closePopup(popupProfileAvatar)
-        avatarInput.value = '';
-    })
-    .finally (() => {
-        renderLoading(false);
-    })
+        .then((profileData) => {
+            document.querySelector('.profile__avatar').src = profileData.avatar;
+        })
+        .then(() => {
+            closePopup(popupProfileAvatar);
+            setButtonState(objTuneValidation);
+            evt.target.reset();
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false);
+        })
 
 }
 
@@ -48,18 +62,28 @@ function addProfileInfoSubmitHandler(evt) {
     const profile = {
         name: nameInput.value,
         about: jobInput.value
-      };
-    renderProfileData(profile);
+    };
+    renderProfileData(profile)
+        .then((profileData) => {
+            profileTitle.textContent = profileData.name;
+            profileDescription.textContent = profileData.about
+            profileAva.src = profileData.avatar;
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     getProfileData()
-    .then (() => {
-        closePopup(popupProfile);
-        nameInput.value = profileTitle.textContent;
-        jobInput.value = profileDescription.textContent
-    })
-    .finally (() => {
-        renderLoading(false);
-    })
-    
+        .then(() => {
+            closePopup(popupProfile);
+            evt.target.reset();
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false);
+        })
+
 };
 function addNewPlaceSubmitHandler(evt) {
     evt.preventDefault();
@@ -69,23 +93,27 @@ function addNewPlaceSubmitHandler(evt) {
         link: placeLinkInput.value
     }
     addCardToServer(cardData)
-    .then (() => {
-        closePopup(popupCreateNewCard);
-        setButtonState(objTuneValidation);
-        placeTitleInput.value = '';
-        placeLinkInput.value = '';
-    })
-    .finally (() => {
-        renderLoading(false);
-    })
-
+        .then((cardData) => {
+            cardContainerUserAdd.prepend(createCard(cardData.name, cardData.link, cardData.likes.length, cardData.owner._id, cardData._id));
+        })
+        .then(() => {
+            closePopup(popupCreateNewCard);
+            setButtonState(objTuneValidation);
+            evt.target.reset();
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false);
+        })
 }
 
 function addNameInputValue() {
-    nameInput.value = document.querySelector('.profile__title').textContent;
+    nameInput.value = profileTitle.textContent;
 };
 function addJobInputValue() {
-    jobInput.value = document.querySelector('.profile__description').textContent;
+    jobInput.value = profileDescription.textContent;
 };
 
 
@@ -138,7 +166,6 @@ formElementPlace.addEventListener('submit', addNewPlaceSubmitHandler);
 formAvatarEdit.addEventListener('submit', addProfileAvatarSubmitHandler);
 
 enableValidation(objTuneValidation);
-getCards();
 
 
 

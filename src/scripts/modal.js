@@ -1,4 +1,3 @@
-//import { formProfileEdit } from "./util.js";
 export const formProfileEdit = document.querySelector('#form-profile');
 export const popupCreateNewCard = document.querySelector('#popup-place');
 export const popupProfile = document.querySelector('#popup-edit-profile');
@@ -14,6 +13,7 @@ export const jobInput = document.forms.formProfile.querySelector('#form__item-us
 export const profileTitle = document.querySelector('.profile__title');
 export const profileDescription = document.querySelector('.profile__description');
 export const profileAvatar = document.querySelector('.profile__avatar-container');
+export const profileAva = document.querySelector('.profile__avatar');
 export const popupProfileAvatar = document.querySelector('#popup-profile-foto');
 export const buttonClosePopupProfileAvatar = document.querySelector('.popup__toggle_profile-foto');
 export const avatarInput  = document.querySelector('#form__item-avatarlink');
@@ -36,7 +36,6 @@ const closeByEsc = function (evt) {
         const popup = document.querySelector('.popup_opened');
         closePopup(popup);
     }
-    //document.removeEventListener('keydown', closeByEsc);
 };
 
 export const closeByClickOverlay = function (evt) {

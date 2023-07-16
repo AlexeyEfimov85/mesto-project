@@ -60,7 +60,7 @@ export const hasInvalidInput = (inputList) => {
 };
 
 const toggleButtonState = (inputList, buttonElement) => {
-   if (hasInvalidInput(inputList)) {
+  if (hasInvalidInput(inputList)) {
     buttonElement.disabled = true;
     buttonElement.classList.add(objTuneValidation.buttonDisabled);
   } else {
@@ -69,10 +69,12 @@ const toggleButtonState = (inputList, buttonElement) => {
   }
 };
 
-export const setButtonState = function() {
-  const buttonElement = document.forms.form.querySelector(objTuneValidation.buttonElement);
-  buttonElement.disabled = true;
-  buttonElement.classList.add(objTuneValidation.buttonDisabled);
+export const setButtonState = function () {
+  const buttonElement = document.querySelectorAll(objTuneValidation.buttonElement);
+  buttonElement.forEach((item) => {
+    item.disabled = true;
+    item.classList.add(objTuneValidation.buttonDisabled);
+  })
 }
 
 

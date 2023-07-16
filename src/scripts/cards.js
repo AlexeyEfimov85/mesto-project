@@ -6,7 +6,7 @@ export const placeLinkInput = document.querySelector('#form__item-placelink');
 export const cardContainerUserAdd = document.querySelector('.places');
 import { userID } from "../index.js";
 import { openPopup } from "./modal";
-import { deleteCards, sendLike, deleteLike, renderCard } from "./api";
+import { deleteCards, sendLike, deleteLike } from "./api";
 
 export const createCard = (cardTitleInput, cardImageInput, cardLikes, id, cardID, likeUserID) => {
     const cardTemplateUserAdd = document.querySelector('#card').content;
@@ -29,19 +29,31 @@ export const createCard = (cardTitleInput, cardImageInput, cardLikes, id, cardID
                     evt.target.classList.remove('card__button_checked');
                     cardElementUserAdd.querySelector('.card__like-sum').textContent = res.likes.length;
                 })
+                .catch((err) => {
+                    console.log(err);
+                })
         } else {
             sendLike(cardID)
                 .then((res) => {
                     evt.target.classList.add('card__button_checked');
                     cardElementUserAdd.querySelector('.card__like-sum').textContent = res.likes.length;
                 })
+                .catch((err) => {
+                    console.log(err);
+                })
         }
 
     });
 
     cardTrash.addEventListener('click', function (evt) {
-        evt.target.closest('.card').remove();
-        deleteCards(cardID);
+        deleteCards(cardID)
+            .then(() => {
+                evt.target.closest('.card').remove();
+            }).catch((err) => {
+                console.log(err);
+            });
+
+
     });
     cardElementUserAdd.querySelector('.card__image').addEventListener('click', function (evt) {
 
