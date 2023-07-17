@@ -40,11 +40,11 @@ function addProfileAvatarSubmitHandler(evt) {
     };
     renderProfileAvatar(avatar)
         .then((profileData) => {
-            document.querySelector('.profile__avatar').src = profileData.avatar;
+            profileAva.src = profileData.avatar;
         })
         .then(() => {
             closePopup(popupProfileAvatar);
-            setButtonState(objTuneValidation);
+            setButtonState();
             evt.target.reset();
         })
         .catch((err) => {
@@ -75,6 +75,7 @@ function addProfileInfoSubmitHandler(evt) {
     getProfileData()
         .then(() => {
             closePopup(popupProfile);
+            setButtonState();
             evt.target.reset();
         })
         .catch((err) => {
@@ -98,7 +99,7 @@ function addNewPlaceSubmitHandler(evt) {
         })
         .then(() => {
             closePopup(popupCreateNewCard);
-            setButtonState(objTuneValidation);
+            setButtonState();
             evt.target.reset();
         })
         .catch((err) => {
@@ -165,7 +166,14 @@ formProfileEdit.addEventListener('submit', addProfileInfoSubmitHandler);
 formElementPlace.addEventListener('submit', addNewPlaceSubmitHandler);
 formAvatarEdit.addEventListener('submit', addProfileAvatarSubmitHandler);
 
-enableValidation(objTuneValidation);
+enableValidation({
+    formList: '.form',
+    inputList: '.form__item',
+    buttonElement: '.form__button',
+    buttonDisabled: 'form__button_inactive',
+    inputError: 'form__item_type_error',
+    errorElement: 'form__item-username-error_active'
+  });
 
 
 
