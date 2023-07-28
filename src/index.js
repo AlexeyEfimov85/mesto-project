@@ -7,11 +7,11 @@ import {
     popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading, profileTitle, profileDescription,
     profileAvatar, popupProfileAvatar, buttonClosePopupProfileAvatar, avatarInput, formAvatarEdit, profileAva
 } from './scripts/modal';
-import { enableValidation, objTuneValidation, setButtonState } from './scripts/validate';
-import { /*getCards, getProfileData, renderProfileData, addCardToServer,*/ renderProfileAvatar, Api } from './scripts/api.js';
+import { enableValidation, setButtonState } from './scripts/validate';
+import { Api } from './scripts/api.js';
 export let userID;
 
-const api = new Api({
+export const api = new Api({
     baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
     headers: {
       authorization: 'dff808ff-3720-4dec-bd88-6c3aa62f954a',
@@ -47,7 +47,7 @@ function addProfileAvatarSubmitHandler(evt) {
     const avatar = {
         avatar: avatarInput.value
     };
-    renderProfileAvatar(avatar)
+    api.renderProfileAvatar(avatar)
         .then((profileData) => {
             profileAva.src = profileData.avatar;
         })

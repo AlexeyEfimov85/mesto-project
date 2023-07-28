@@ -4,7 +4,7 @@ export const popupPlaceFullTitle = popupPlaceFull.querySelector('.popup__image-t
 export const placeTitleInput = document.querySelector('#form__item-placetitle');
 export const placeLinkInput = document.querySelector('#form__item-placelink');
 export const cardContainerUserAdd = document.querySelector('.places');
-import { userID } from "../index.js";
+import { userID, api } from "../index.js";
 import { openPopup } from "./modal";
 import { deleteCards, sendLike, deleteLike } from "./api";
 
@@ -24,7 +24,7 @@ export const createCard = (cardTitleInput, cardImageInput, cardLikes, id, cardID
     };
     cardElementUserAdd.querySelector('.card__button').addEventListener('click', function (evt) {
         if (evt.target.classList.contains('card__button_checked')) {
-            deleteLike(cardID)
+            api.deleteLike(cardID)
                 .then((res) => {
                     evt.target.classList.remove('card__button_checked');
                     cardElementUserAdd.querySelector('.card__like-sum').textContent = res.likes.length;
@@ -33,7 +33,7 @@ export const createCard = (cardTitleInput, cardImageInput, cardLikes, id, cardID
                     console.log(err);
                 })
         } else {
-            sendLike(cardID)
+            api.sendLike(cardID)
                 .then((res) => {
                     evt.target.classList.add('card__button_checked');
                     cardElementUserAdd.querySelector('.card__like-sum').textContent = res.likes.length;
@@ -46,7 +46,7 @@ export const createCard = (cardTitleInput, cardImageInput, cardLikes, id, cardID
     });
 
     cardTrash.addEventListener('click', function (evt) {
-        deleteCards(cardID)
+        api.deleteCards(cardID)
             .then(() => {
                 evt.target.closest('.card').remove();
             }).catch((err) => {
