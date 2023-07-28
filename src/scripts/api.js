@@ -1,4 +1,4 @@
-import { checkResponse } from "./util";
+//import { checkResponse } from "./util";
 export const config = {
   baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
   headers: {
@@ -6,7 +6,63 @@ export const config = {
     'Content-Type': 'application/json',
   },
 };
-export function getCards() {
+
+
+export class Api {
+  constructor(option) {
+    this.URL = option['baseUrl'];
+    this.headers = option['headers'];
+  }
+
+  _checkResponse(res) {
+    if (!res.ok) {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+    return res.json();
+  };
+
+  getCards() {
+        return fetch(this.URL + 'cards', {
+          headers: this.headers
+        }).then((res) => {
+          return this._checkResponse(res);
+        })
+    
+  };
+
+  getProfileData() {
+    return fetch(this.URL + 'users/me', {
+      headers: this.headers
+    }).
+    then((res) => {
+      return this._checkResponse(res);
+    })
+  };
+
+  renderProfileData(profileData) {
+    return fetch(this.URL + 'users/me', {
+      method: 'PATCH',
+      headers:  this.headers,
+      body: JSON.stringify(profileData)
+    }).then((res) => {
+      return this._checkResponse(res);
+    })
+  };
+  addCardToServer(cardData) {
+    return fetch(this.URL + 'cards', {
+      method: 'POST',
+      headers:  this.headers,
+      body: JSON.stringify(cardData)
+    }).then(this._checkResponse)
+  
+  }
+
+  // другие методы работы с API
+}
+
+
+
+/*export function getCards() {
   return fetch(config['baseUrl'] + 'cards', {
     headers: config['headers']
   })
@@ -36,7 +92,7 @@ export function addCardToServer(cardData) {
     body: JSON.stringify(cardData)
   }).then(checkResponse)
 
-}
+}*/
 
 
 export function sendLike(id) {

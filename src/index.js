@@ -8,10 +8,19 @@ import {
     profileAvatar, popupProfileAvatar, buttonClosePopupProfileAvatar, avatarInput, formAvatarEdit, profileAva
 } from './scripts/modal';
 import { enableValidation, objTuneValidation, setButtonState } from './scripts/validate';
-import { getCards, getProfileData, renderProfileData, addCardToServer, renderProfileAvatar } from './scripts/api.js';
+import { /*getCards, getProfileData, renderProfileData, addCardToServer,*/ renderProfileAvatar, Api } from './scripts/api.js';
 export let userID;
 
-Promise.all([getCards(), getProfileData()])
+const api = new Api({
+    baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
+    headers: {
+      authorization: 'dff808ff-3720-4dec-bd88-6c3aa62f954a',
+      'Content-Type': 'application/json',
+    }
+  }); 
+  
+ 
+Promise.all([api.getCards(), api.getProfileData()])
     .then(([initialCards, profileData]) => {
         profileTitle.textContent = profileData.name;
         profileDescription.textContent = profileData.about
@@ -63,7 +72,7 @@ function addProfileInfoSubmitHandler(evt) {
         name: nameInput.value,
         about: jobInput.value
     };
-    renderProfileData(profile)
+    api.renderProfileData(profile)
         .then((profileData) => {
             profileTitle.textContent = profileData.name;
             profileDescription.textContent = profileData.about
@@ -72,7 +81,7 @@ function addProfileInfoSubmitHandler(evt) {
         .catch((err) => {
             console.log(err);
         });
-    getProfileData()
+    api.getProfileData()
         .then(() => {
             closePopup(popupProfile);
             setButtonState();
@@ -93,7 +102,7 @@ function addNewPlaceSubmitHandler(evt) {
         name: placeTitleInput.value,
         link: placeLinkInput.value
     }
-    addCardToServer(cardData)
+    api.addCardToServer(cardData)
         .then((cardData) => {
             cardContainerUserAdd.prepend(createCard(cardData.name, cardData.link, cardData.likes.length, cardData.owner._id, cardData._id));
         })
