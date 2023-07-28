@@ -6,7 +6,6 @@ export const placeLinkInput = document.querySelector('#form__item-placelink');
 export const cardContainerUserAdd = document.querySelector('.places');
 import { userID, api } from "../index.js";
 import { openPopup } from "./modal";
-import { deleteCards, sendLike, deleteLike } from "./api";
 
 export const createCard = (cardTitleInput, cardImageInput, cardLikes, id, cardID, likeUserID) => {
     const cardTemplateUserAdd = document.querySelector('#card').content;
