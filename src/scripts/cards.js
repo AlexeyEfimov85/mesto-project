@@ -7,7 +7,9 @@ export const cardContainerUserAdd = document.querySelector('.places');
 import { userID } from "../index.js";
 import { openPopup } from "./modal";
 import { deleteCards, sendLike, deleteLike } from "./api";
-
+ export class Card {
+    
+ }
 export const createCard = (cardTitleInput, cardImageInput, cardLikes, id, cardID, likeUserID) => {
     const cardTemplateUserAdd = document.querySelector('#card').content;
     const cardElementUserAdd = cardTemplateUserAdd.querySelector('.card').cloneNode(true);
