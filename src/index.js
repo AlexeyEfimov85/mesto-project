@@ -1,17 +1,17 @@
 import './pages/index.css';
 import { formProfileEdit } from './scripts/util.js'
-import { placeTitleInput, placeLinkInput, cardContainerUserAdd, createCard } from "./scripts/cards.js";
+import { placeTitleInput, placeLinkInput, cardContainerUserAdd, Card } from "./scripts/cards.js";
 import {
     openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile,
     buttonOpenPopupCreateCard, buttonClosePopupCreateNewCard, formElementPlace, buttonEdit, buttonPopupProfileToggle,
     popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading, profileTitle, profileDescription,
     profileAvatar, popupProfileAvatar, buttonClosePopupProfileAvatar, avatarInput, formAvatarEdit, profileAva
 } from './scripts/modal';
-import { enableValidation, objTuneValidation, setButtonState } from './scripts/validate';
-import { /*getCards, getProfileData, renderProfileData, addCardToServer,*/ renderProfileAvatar, Api } from './scripts/api.js';
+import { enableValidation, setButtonState } from './scripts/validate';
+import { Api } from './scripts/api.js';
 export let userID;
 
-const api = new Api({
+export const api = new Api({
     baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
     headers: {
       authorization: 'dff808ff-3720-4dec-bd88-6c3aa62f954a',
@@ -34,7 +34,8 @@ Promise.all([api.getCards(), api.getProfileData()])
             const newNewArr = newArr.some(myId => {
                 return myId === userID
             })
-            cardContainerUserAdd.append(createCard(item.name, item.link, item.likes.length, item.owner._id, item._id, newNewArr));
+            const card = new Card(item,'#card',newNewArr).generate()
+            cardContainerUserAdd.append(card);
         });
     })
     .catch((err) => {
@@ -47,7 +48,7 @@ function addProfileAvatarSubmitHandler(evt) {
     const avatar = {
         avatar: avatarInput.value
     };
-    renderProfileAvatar(avatar)
+    api.renderProfileAvatar(avatar)
         .then((profileData) => {
             profileAva.src = profileData.avatar;
         })
@@ -104,7 +105,8 @@ function addNewPlaceSubmitHandler(evt) {
     }
     api.addCardToServer(cardData)
         .then((cardData) => {
-            cardContainerUserAdd.prepend(createCard(cardData.name, cardData.link, cardData.likes.length, cardData.owner._id, cardData._id));
+            const newCard = new Card(cardData,'#card').generate()
+            cardContainerUserAdd.prepend(newCard);
         })
         .then(() => {
             closePopup(popupCreateNewCard);
@@ -183,7 +185,8 @@ enableValidation({
     inputError: 'form__item_type_error',
     errorElement: 'form__item-username-error_active'
   });
-
+api.getCards()
+.then((result)=> console.log(result))
 
 
 
