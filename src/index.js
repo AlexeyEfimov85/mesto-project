@@ -1,6 +1,6 @@
 import './pages/index.css';
 import { formProfileEdit } from './scripts/util.js'
-import { placeTitleInput, placeLinkInput, cardContainerUserAdd, createCard } from "./scripts/cards.js";
+import { placeTitleInput, placeLinkInput, cardContainerUserAdd, Card } from "./scripts/cards.js";
 import {
     openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile,
     buttonOpenPopupCreateCard, buttonClosePopupCreateNewCard, formElementPlace, buttonEdit, buttonPopupProfileToggle,
@@ -34,7 +34,8 @@ Promise.all([api.getCards(), api.getProfileData()])
             const newNewArr = newArr.some(myId => {
                 return myId === userID
             })
-            cardContainerUserAdd.append(createCard(item.name, item.link, item.likes.length, item.owner._id, item._id, newNewArr));
+            const card = new Card(item,'#card',newNewArr).generate()
+            cardContainerUserAdd.append(card);
         });
     })
     .catch((err) => {
@@ -104,7 +105,8 @@ function addNewPlaceSubmitHandler(evt) {
     }
     api.addCardToServer(cardData)
         .then((cardData) => {
-            cardContainerUserAdd.prepend(createCard(cardData.name, cardData.link, cardData.likes.length, cardData.owner._id, cardData._id));
+            const newCard = new Card(cardData,'#card').generate()
+            cardContainerUserAdd.prepend(newCard);
         })
         .then(() => {
             closePopup(popupCreateNewCard);
@@ -183,7 +185,8 @@ enableValidation({
     inputError: 'form__item_type_error',
     errorElement: 'form__item-username-error_active'
   });
-
+api.getCards()
+.then((result)=> console.log(result))
 
 
 
