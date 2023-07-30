@@ -1,5 +1,5 @@
 import './pages/index.css';
-import { formProfileEdit } from './scripts/util.js'
+import { formProfileEdit, tuneValidation } from './scripts/util.js'
 import { placeTitleInput, placeLinkInput, cardContainerUserAdd, Card } from "./scripts/cards.js";
 import {
     openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile,
@@ -7,7 +7,7 @@ import {
     popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading, profileTitle, profileDescription,
     profileAvatar, popupProfileAvatar, buttonClosePopupProfileAvatar, avatarInput, formAvatarEdit, profileAva
 } from './scripts/modal';
-import { enableValidation, setButtonState } from './scripts/validate';
+import { enableValidation, setButtonState, FormValidator } from './scripts/validate';
 import { Api } from './scripts/api.js';
 export let userID;
 
@@ -177,14 +177,13 @@ formProfileEdit.addEventListener('submit', addProfileInfoSubmitHandler);
 formElementPlace.addEventListener('submit', addNewPlaceSubmitHandler);
 formAvatarEdit.addEventListener('submit', addProfileAvatarSubmitHandler);
 
-enableValidation({
-    formList: '.form',
-    inputList: '.form__item',
-    buttonElement: '.form__button',
-    buttonDisabled: 'form__button_inactive',
-    inputError: 'form__item_type_error',
-    errorElement: 'form__item-username-error_active'
-  });
+const formValidatorProfile = new FormValidator (tuneValidation, formProfileEdit);
+const formValidatorPlace = new FormValidator (tuneValidation, formElementPlace);
+const formValidatorProfilePhoto = new FormValidator (tuneValidation, formAvatarEdit);
+formValidatorProfile.enableValidation();
+formValidatorPlace.enableValidation();
+formValidatorProfilePhoto.enableValidation()
+
 api.getCards()
 .then((result)=> console.log(result))
 
