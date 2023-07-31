@@ -9,34 +9,46 @@ import {
 } from './scripts/modal';
 import { enableValidation, setButtonState, FormValidator } from './scripts/validate';
 import { Api } from './scripts/api.js';
+import Section from "./scripts/section.js";
 export let userID;
 
 export const api = new Api({
     baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
     headers: {
-      authorization: 'dff808ff-3720-4dec-bd88-6c3aa62f954a',
-      'Content-Type': 'application/json',
+        authorization: 'dff808ff-3720-4dec-bd88-6c3aa62f954a',
+        'Content-Type': 'application/json',
     }
-  }); 
-  
- 
+});
+
+
 Promise.all([api.getCards(), api.getProfileData()])
     .then(([initialCards, profileData]) => {
-        profileTitle.textContent = profileData.name;
-        profileDescription.textContent = profileData.about
-        profileAva.src = profileData.avatar;
+        const profile = new Section({
+            items: profileData,
+            renderer: (item) =>{
+                profileTitle.textContent = item.name;
+                profileDescription.textContent = item.about
+                profileAva.src = item.avatar;
+            }
+        })
         userID = profileData._id
-        initialCards.forEach(item => {
-            const arr = item.likes;
-            const newArr = arr.map(userid => {
-                return userid._id;
-            })
-            const newNewArr = newArr.some(myId => {
-                return myId === userID
-            })
-            const card = new Card(item,'#card',newNewArr).generate()
-            cardContainerUserAdd.append(card);
-        });
+        const placesList = new Section({
+            items: initialCards,
+            renderer: (item) => {
+                const arr = item.likes;
+                const newArr = arr.map(userid => {
+                    return userid._id;
+                })
+                const newNewArr = newArr.some(myId => {
+                    return myId === userID
+                })
+                const card = new Card(item, '#card', newNewArr)
+                const cardElement = card.generate()
+                placesList.addItem(cardElement)
+            }
+        }, '.places')
+        placesList.renderItems()
+        profile.renderItems()
     })
     .catch((err) => {
         console.log(err);
@@ -105,7 +117,7 @@ function addNewPlaceSubmitHandler(evt) {
     }
     api.addCardToServer(cardData)
         .then((cardData) => {
-            const newCard = new Card(cardData,'#card').generate()
+            const newCard = new Card(cardData, '#card').generate()
             cardContainerUserAdd.prepend(newCard);
         })
         .then(() => {
@@ -177,15 +189,15 @@ formProfileEdit.addEventListener('submit', addProfileInfoSubmitHandler);
 formElementPlace.addEventListener('submit', addNewPlaceSubmitHandler);
 formAvatarEdit.addEventListener('submit', addProfileAvatarSubmitHandler);
 
-const formValidatorProfile = new FormValidator (tuneValidation, formProfileEdit);
-const formValidatorPlace = new FormValidator (tuneValidation, formElementPlace);
-const formValidatorProfilePhoto = new FormValidator (tuneValidation, formAvatarEdit);
+const formValidatorProfile = new FormValidator(tuneValidation, formProfileEdit);
+const formValidatorPlace = new FormValidator(tuneValidation, formElementPlace);
+const formValidatorProfilePhoto = new FormValidator(tuneValidation, formAvatarEdit);
 formValidatorProfile.enableValidation();
 formValidatorPlace.enableValidation();
 formValidatorProfilePhoto.enableValidation()
 
 api.getCards()
-.then((result)=> console.log(result))
-
-
+    .then((result) => {
+        console.log(result)
+    })
 
