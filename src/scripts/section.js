@@ -7,11 +7,12 @@
     addItem(element){
         this._container.append(element);
     }
-    clear() {
+    _clear() {
         this._container.innerHTML = '';
       }
     renderItems(){
         if(Array.isArray(this._renderedItems)){
+            this._clear()
         this._renderedItems.forEach(item => {
             this._renderer(item);
           })
