@@ -1,32 +1,55 @@
 import './pages/index.css';
-import { formProfileEdit } from './scripts/util.js'
-import { placeTitleInput, placeLinkInput, cardContainerUserAdd, createCard } from "./scripts/cards.js";
+import { formProfileEdit, tuneValidation } from './scripts/util.js'
+import { placeTitleInput, placeLinkInput, cardContainerUserAdd, Card } from "./scripts/cards.js";
 import {
     openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile,
     buttonOpenPopupCreateCard, buttonClosePopupCreateNewCard, formElementPlace, buttonEdit, buttonPopupProfileToggle,
     popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading, profileTitle, profileDescription,
     profileAvatar, popupProfileAvatar, buttonClosePopupProfileAvatar, avatarInput, formAvatarEdit, profileAva
 } from './scripts/modal';
-import { enableValidation, objTuneValidation, setButtonState } from './scripts/validate';
-import { getCards, getProfileData, renderProfileData, addCardToServer, renderProfileAvatar } from './scripts/api.js';
+import { enableValidation, setButtonState, FormValidator } from './scripts/validate';
+import { Api } from './scripts/api.js';
+import Section from "./scripts/section.js";
+import PopupWithForm from './scripts/PopupWithForm';
+import { UserInfo } from './scripts/userInfo';
 export let userID;
+export const api = new Api({
+    baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
+    headers: {
+        authorization: 'dff808ff-3720-4dec-bd88-6c3aa62f954a',
+        'Content-Type': 'application/json',
+    }
+})
 
-Promise.all([getCards(), getProfileData()])
+const userInfo =new UserInfo({selectorName: '.profile__title',selectorDescription : '.profile__description'})
+Promise.all([api.getCards(),userInfo.getUserInfo()])
     .then(([initialCards, profileData]) => {
-        profileTitle.textContent = profileData.name;
-        profileDescription.textContent = profileData.about
-        profileAva.src = profileData.avatar;
-        userID = profileData._id
-        initialCards.forEach(item => {
-            const arr = item.likes;
-            const newArr = arr.map(userid => {
-                return userid._id;
-            })
-            const newNewArr = newArr.some(myId => {
-                return myId === userID
-            })
-            cardContainerUserAdd.append(createCard(item.name, item.link, item.likes.length, item.owner._id, item._id, newNewArr));
-        });
+        const profile = new Section({
+            items: profileData,
+            renderer: (item) =>{
+                profileTitle.textContent = item.name;
+                profileDescription.textContent = item.about
+                profileAva.src = item.avatar;
+            }
+        })
+        userID = profileData._id   
+        const placesList = new Section({
+            items: initialCards,
+            renderer: (item) => {
+                const arr = item.likes;
+                const newArr = arr.map(userid => {
+                    return userid._id;
+                })
+                const newNewArr = newArr.some(myId => {
+                    return myId === userID
+                })
+                const card = new Card(item, '#card', newNewArr)
+                const cardElement = card.generate()
+                placesList.addItem(cardElement)
+            }
+        }, '.places')
+        placesList.renderItems()
+        profile.renderItems()
     })
     .catch((err) => {
         console.log(err);
@@ -38,10 +61,14 @@ function addProfileAvatarSubmitHandler(evt) {
     const avatar = {
         avatar: avatarInput.value
     };
-    renderProfileAvatar(avatar)
-        .then((profileData) => {
-            profileAva.src = profileData.avatar;
-        })
+    api.renderProfileAvatar(avatar)
+    .then((profileData) => {
+        const profile = new Section({items: profileData,
+        renderer: ()=>{
+        profileAva.src = profileData.avatar;
+        }})
+        profile.renderItems()
+    })
         .then(() => {
             closePopup(popupProfileAvatar);
             setButtonState();
@@ -63,16 +90,8 @@ function addProfileInfoSubmitHandler(evt) {
         name: nameInput.value,
         about: jobInput.value
     };
-    renderProfileData(profile)
-        .then((profileData) => {
-            profileTitle.textContent = profileData.name;
-            profileDescription.textContent = profileData.about
-            profileAva.src = profileData.avatar;
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-    getProfileData()
+    userInfo.setUserInfo(profile)
+    userInfo.getUserInfo()
         .then(() => {
             closePopup(popupProfile);
             setButtonState();
@@ -93,9 +112,27 @@ function addNewPlaceSubmitHandler(evt) {
         name: placeTitleInput.value,
         link: placeLinkInput.value
     }
-    addCardToServer(cardData)
-        .then((cardData) => {
-            cardContainerUserAdd.prepend(createCard(cardData.name, cardData.link, cardData.likes.length, cardData.owner._id, cardData._id));
+    api.addCardToServer(cardData)
+        .then(() => {
+            api.getCards()
+            .then((initialCards)=>{
+                const placesList = new Section({
+                    items: initialCards,
+                    renderer: (item) => {
+                        const arr = item.likes;
+                        const newArr = arr.map(userid => {
+                            return userid._id;
+                        })
+                        const newNewArr = newArr.some(myId => {
+                            return myId === userID
+                        })
+                        const card = new Card(item, '#card', newNewArr)
+                        const cardElement = card.generate()
+                        placesList.addItem(cardElement)
+                    }
+                }, '.places')
+                placesList.renderItems()
+            })
         })
         .then(() => {
             closePopup(popupCreateNewCard);
@@ -127,54 +164,61 @@ popupPlaceFull.addEventListener('click', closeByClickOverlay);
 buttonOpenPopupCreateCard.addEventListener('click', function () {
     openPopup(popupCreateNewCard);
 });
-buttonClosePopupCreateNewCard.addEventListener('click', function () {
+/*buttonClosePopupCreateNewCard.addEventListener('click', function () {
     closePopup(popupCreateNewCard);
 });
 popupCreateNewCard.addEventListener('click', function (evt) {
     if (evt.target.classList.contains('popup')) {
         closePopup(popupCreateNewCard);
     }
-});
+});*/
 
 buttonEdit.addEventListener('click', function () {
-    openPopup(popupProfile);
+    popupProfileEdit.open();
+    //openPopup(popupProfile);
     addNameInputValue();
     addJobInputValue();
 });
-buttonPopupProfileToggle.addEventListener('click', function () {
+/*buttonPopupProfileToggle.addEventListener('click', function () {
     closePopup(popupProfile);
-});
-popupProfile.addEventListener('click', function (evt) {
+});*/
+/*popupProfile.addEventListener('click', function (evt) {
     if (evt.target.classList.contains('popup')) {
         closePopup(popupProfile);
     }
-});
+});*/
 
 profileAvatar.addEventListener('click', function () {
     openPopup(popupProfileAvatar);
 });
-popupProfileAvatar.addEventListener('click', function (evt) {
+/*popupProfileAvatar.addEventListener('click', function (evt) {
     if (evt.target.classList.contains('popup')) {
         closePopup(popupProfileAvatar);
     }
 });
 buttonClosePopupProfileAvatar.addEventListener('click', function () {
     closePopup(popupProfileAvatar);
-});
+});*/
 
-formProfileEdit.addEventListener('submit', addProfileInfoSubmitHandler);
+/*formProfileEdit.addEventListener('submit', addProfileInfoSubmitHandler);
 formElementPlace.addEventListener('submit', addNewPlaceSubmitHandler);
-formAvatarEdit.addEventListener('submit', addProfileAvatarSubmitHandler);
+formAvatarEdit.addEventListener('submit', addProfileAvatarSubmitHandler);*/
 
-enableValidation({
-    formList: '.form',
-    inputList: '.form__item',
-    buttonElement: '.form__button',
-    buttonDisabled: 'form__button_inactive',
-    inputError: 'form__item_type_error',
-    errorElement: 'form__item-username-error_active'
-  });
+const popupProfileEdit = new PopupWithForm(popupProfile, addProfileInfoSubmitHandler);
+const popupElementPlace = new PopupWithForm(popupCreateNewCard, addNewPlaceSubmitHandler);
+const popupAvatarEdit = new PopupWithForm(popupProfileAvatar, addProfileAvatarSubmitHandler);
+popupProfileEdit.setEventListeners();
+popupElementPlace.setEventListeners();
+popupAvatarEdit.setEventListeners();
 
+const formValidatorProfile = new FormValidator(tuneValidation, formProfileEdit);
+const formValidatorPlace = new FormValidator(tuneValidation, formElementPlace);
+const formValidatorProfilePhoto = new FormValidator(tuneValidation, formAvatarEdit);
+formValidatorProfile.enableValidation();
+formValidatorPlace.enableValidation();
+formValidatorProfilePhoto.enableValidation()
 
-
-
+api.getCards()
+    .then((result) => {
+        console.log(result)
+    })
