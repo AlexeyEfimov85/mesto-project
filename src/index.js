@@ -10,7 +10,8 @@ import {
 import { enableValidation, setButtonState, FormValidator } from './scripts/validate';
 import { Api } from './scripts/api.js';
 import Section from "./scripts/section.js";
-import  {UserInfo}  from './scripts/userInfo.js';
+import PopupWithForm from './scripts/PopupWithForm';
+import { UserInfo } from './scripts/userInfo';
 export let userID;
 export const api = new Api({
     baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
@@ -21,9 +22,7 @@ export const api = new Api({
 })
 
 const userInfo =new UserInfo({selectorName: '.profile__title',selectorDescription : '.profile__description'})
-let a = userInfo.getUserInfo()
-console.log(a)
-Promise.all([api.getCards(),api.getProfileData()])
+Promise.all([api.getCards(),userInfo.getUserInfo()])
     .then(([initialCards, profileData]) => {
         const profile = new Section({
             items: profileData,
@@ -92,7 +91,7 @@ function addProfileInfoSubmitHandler(evt) {
         about: jobInput.value
     };
     userInfo.setUserInfo(profile)
-    api.getProfileData()
+    userInfo.getUserInfo()
         .then(() => {
             closePopup(popupProfile);
             setButtonState();
@@ -165,44 +164,52 @@ popupPlaceFull.addEventListener('click', closeByClickOverlay);
 buttonOpenPopupCreateCard.addEventListener('click', function () {
     openPopup(popupCreateNewCard);
 });
-buttonClosePopupCreateNewCard.addEventListener('click', function () {
+/*buttonClosePopupCreateNewCard.addEventListener('click', function () {
     closePopup(popupCreateNewCard);
 });
 popupCreateNewCard.addEventListener('click', function (evt) {
     if (evt.target.classList.contains('popup')) {
         closePopup(popupCreateNewCard);
     }
-});
+});*/
 
 buttonEdit.addEventListener('click', function () {
-    openPopup(popupProfile);
+    popupProfileEdit.open();
+    //openPopup(popupProfile);
     addNameInputValue();
     addJobInputValue();
 });
-buttonPopupProfileToggle.addEventListener('click', function () {
+/*buttonPopupProfileToggle.addEventListener('click', function () {
     closePopup(popupProfile);
-});
-popupProfile.addEventListener('click', function (evt) {
+});*/
+/*popupProfile.addEventListener('click', function (evt) {
     if (evt.target.classList.contains('popup')) {
         closePopup(popupProfile);
     }
-});
+});*/
 
 profileAvatar.addEventListener('click', function () {
     openPopup(popupProfileAvatar);
 });
-popupProfileAvatar.addEventListener('click', function (evt) {
+/*popupProfileAvatar.addEventListener('click', function (evt) {
     if (evt.target.classList.contains('popup')) {
         closePopup(popupProfileAvatar);
     }
 });
 buttonClosePopupProfileAvatar.addEventListener('click', function () {
     closePopup(popupProfileAvatar);
-});
+});*/
 
-formProfileEdit.addEventListener('submit', addProfileInfoSubmitHandler);
+/*formProfileEdit.addEventListener('submit', addProfileInfoSubmitHandler);
 formElementPlace.addEventListener('submit', addNewPlaceSubmitHandler);
-formAvatarEdit.addEventListener('submit', addProfileAvatarSubmitHandler);
+formAvatarEdit.addEventListener('submit', addProfileAvatarSubmitHandler);*/
+
+const popupProfileEdit = new PopupWithForm(popupProfile, addProfileInfoSubmitHandler);
+const popupElementPlace = new PopupWithForm(popupCreateNewCard, addNewPlaceSubmitHandler);
+const popupAvatarEdit = new PopupWithForm(popupProfileAvatar, addProfileAvatarSubmitHandler);
+popupProfileEdit.setEventListeners();
+popupElementPlace.setEventListeners();
+popupAvatarEdit.setEventListeners();
 
 const formValidatorProfile = new FormValidator(tuneValidation, formProfileEdit);
 const formValidatorPlace = new FormValidator(tuneValidation, formElementPlace);

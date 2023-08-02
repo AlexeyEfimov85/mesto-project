@@ -6,7 +6,7 @@ import Section from "./section.js"
         this._selectorDescription = selectorDescription
     }
     getUserInfo(){
-        api.getProfileData()
+         return api.getProfileData()
     }
     setUserInfo(profile){
         api.renderProfileData(profile)
