@@ -11,6 +11,7 @@ import { enableValidation, setButtonState, FormValidator } from './scripts/valid
 import { Api } from './scripts/api.js';
 import Section from "./scripts/section.js";
 import PopupWithForm from './scripts/PopupWithForm';
+import { UserInfo } from './scripts/userInfo';
 export let userID;
 export const api = new Api({
     baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
@@ -19,7 +20,9 @@ export const api = new Api({
         'Content-Type': 'application/json',
     }
 })
-Promise.all([api.getCards(), api.getProfileData()])
+
+const userInfo =new UserInfo({selectorName: '.profile__title',selectorDescription : '.profile__description'})
+Promise.all([api.getCards(),userInfo.getUserInfo()])
     .then(([initialCards, profileData]) => {
         const profile = new Section({
             items: profileData,
@@ -87,20 +90,8 @@ function addProfileInfoSubmitHandler(evt) {
         name: nameInput.value,
         about: jobInput.value
     };
-    api.renderProfileData(profile)
-        .then((profileData) => {
-            const profile = new Section({items: profileData,
-            renderer: ()=>{
-            profileTitle.textContent = profileData.name;
-            profileDescription.textContent = profileData.about
-            profileAva.src = profileData.avatar;
-            }})
-            profile.renderItems()
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-    api.getProfileData()
+    userInfo.setUserInfo(profile)
+    userInfo.getUserInfo()
         .then(() => {
             closePopup(popupProfile);
             setButtonState();
@@ -231,4 +222,3 @@ api.getCards()
     .then((result) => {
         console.log(result)
     })
-
