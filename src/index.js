@@ -41,6 +41,7 @@ Promise.all([api.getCards(), api.getProfileData()])
                 const card = new Card({data: item,handleCardClick: ()=>{
                     const Popup = new PopupWithImage(popupPlaceFull);
                    Popup.open(item.link,item.name)
+
                 } }, '#card', newNewArr,profileData._id,api)
 
                 const cardElement = card.generate()
@@ -146,7 +147,8 @@ function addJobInputValue() {
 
 
 buttonPlaceFullToggle.addEventListener('click', function () {
-    closePopup(popupPlaceFull);
+    const Popup = new PopupWithImage(popupPlaceFull);
+    Popup.close()
 });
 
 popupPlaceFull.addEventListener('click', closeByClickOverlay);
