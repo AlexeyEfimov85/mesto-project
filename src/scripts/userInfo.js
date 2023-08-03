@@ -5,9 +5,13 @@ import Section from "./section.js"
         this._selectorName = selectorName
         this._selectorDescription = selectorDescription
     }
-    getUserInfo(){
-         return api.getProfileData()
-    }
+    getUserInfo(data){
+   return {
+            name: data.name,
+            about: data.about,
+            avatar : data.avatar
+         }
+        }
     setUserInfo(profile){
         api.renderProfileData(profile)
         .then((profileData) => {

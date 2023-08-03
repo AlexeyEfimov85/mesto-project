@@ -1,6 +1,6 @@
 import './pages/index.css';
 import { formProfileEdit, tuneValidation } from './scripts/util.js'
-import { placeTitleInput, placeLinkInput, cardContainerUserAdd, Card } from "./scripts/cards.js";
+import { placeTitleInput, placeLinkInput, cardContainerUserAdd, Card } from "./scripts/Card.js";
 import {
     openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile,
     buttonOpenPopupCreateCard, buttonClosePopupCreateNewCard, formElementPlace, buttonEdit, buttonPopupProfileToggle,
@@ -12,6 +12,7 @@ import { Api } from './scripts/api.js';
 import Section from "./scripts/section.js";
 import PopupWithForm from './scripts/PopupWithForm';
 import { UserInfo } from './scripts/userInfo';
+import PopupWithImage from './scripts/PopupWithImage';
 export let userID;
 export const api = new Api({
     baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
@@ -20,12 +21,12 @@ export const api = new Api({
         'Content-Type': 'application/json',
     }
 })
-
+let placesList = null
 const userInfo =new UserInfo({selectorName: '.profile__title',selectorDescription : '.profile__description'})
-Promise.all([api.getCards(),userInfo.getUserInfo()])
+Promise.all([api.getCards(),api.getProfileData()])
     .then(([initialCards, profileData]) => {
         const profile = new Section({
-            items: profileData,
+            items: userInfo.getUserInfo(profileData),
             renderer: (item) =>{
                 profileTitle.textContent = item.name;
                 profileDescription.textContent = item.about
@@ -33,7 +34,7 @@ Promise.all([api.getCards(),userInfo.getUserInfo()])
             }
         })
         userID = profileData._id   
-        const placesList = new Section({
+      placesList = new Section({
             items: initialCards,
             renderer: (item) => {
                 const arr = item.likes;
@@ -43,7 +44,10 @@ Promise.all([api.getCards(),userInfo.getUserInfo()])
                 const newNewArr = newArr.some(myId => {
                     return myId === userID
                 })
-                const card = new Card(item, '#card', newNewArr)
+                const card = new Card({data: item,handleCardClick: ()=>{
+                    const Popup = new PopupWithImage(popupPlaceFull);
+                   Popup.open(item.link,item.name)
+                } }, '#card', newNewArr,profileData._id,api)
                 const cardElement = card.generate()
                 placesList.addItem(cardElement)
             }
@@ -54,7 +58,6 @@ Promise.all([api.getCards(),userInfo.getUserInfo()])
     .catch((err) => {
         console.log(err);
     });
-
 function addProfileAvatarSubmitHandler(evt) {
     evt.preventDefault();
     renderLoading(true);
@@ -91,7 +94,7 @@ function addProfileInfoSubmitHandler(evt) {
         about: jobInput.value
     };
     userInfo.setUserInfo(profile)
-    userInfo.getUserInfo()
+    api.getProfileData()
         .then(() => {
             closePopup(popupProfile);
             setButtonState();
@@ -113,26 +116,8 @@ function addNewPlaceSubmitHandler(evt) {
         link: placeLinkInput.value
     }
     api.addCardToServer(cardData)
-        .then(() => {
-            api.getCards()
-            .then((initialCards)=>{
-                const placesList = new Section({
-                    items: initialCards,
-                    renderer: (item) => {
-                        const arr = item.likes;
-                        const newArr = arr.map(userid => {
-                            return userid._id;
-                        })
-                        const newNewArr = newArr.some(myId => {
-                            return myId === userID
-                        })
-                        const card = new Card(item, '#card', newNewArr)
-                        const cardElement = card.generate()
-                        placesList.addItem(cardElement)
-                    }
-                }, '.places')
-                placesList.renderItems()
-            })
+        .then(() => {    
+          console.log(placesList)
         })
         .then(() => {
             closePopup(popupCreateNewCard);
