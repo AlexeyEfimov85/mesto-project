@@ -1,12 +1,9 @@
 import './pages/index.css';
-import { formProfileEdit, tuneValidation } from './scripts/util.js'
-import { placeTitleInput, placeLinkInput, Card } from "./scripts/Card.js";
-import {
-    closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile,
-    buttonOpenPopupCreateCard, formElementPlace, buttonEdit,     popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading, profileTitle, profileDescription,
-    profileAvatar, popupProfileAvatar, avatarInput, formAvatarEdit, profileAva
-} from './scripts/modal';
-import { cardContainerUserAdd } from './scripts/constants';
+import { formProfileEdit, tuneValidation, renderLoading } from './scripts/util.js'
+import { Card } from "./scripts/Card.js";
+import { cardContainerUserAdd, popupCreateNewCard, nameInput, jobInput, popupProfile,
+    buttonOpenPopupCreateCard, formElementPlace, buttonEdit, popupPlaceFull, profileTitle, profileDescription,
+    profileAvatar, popupProfileAvatar, formAvatarEdit, profileAva } from './scripts/constants';
 import { FormValidator } from './scripts/FormValidator';
 import { Api } from './scripts/api.js';
 import Section from "./scripts/section.js";
@@ -70,9 +67,8 @@ function addProfileAvatarSubmitHandler(data) {
             profile.renderItems()
         })
         .then(() => {
-            closePopup(popupProfileAvatar);
+            popupAvatarEdit.close();
             formValidatorProfilePhoto.setButtonState();
-            formAvatarEdit.reset();
         })
         .catch((err) => {
             console.log(err);
@@ -98,9 +94,8 @@ function addProfileInfoSubmitHandler(data) {
 
     api.getProfileData()
         .then(() => {
-            closePopup(popupProfile);
+            popupProfileEdit.close();
             formValidatorProfile.setButtonState();
-            formProfileEdit.reset();
         })
         .catch((err) => {
             console.log(err);
@@ -126,9 +121,8 @@ function addNewPlaceSubmitHandler(data) {
             cardContainerUserAdd.prepend(cardElement)
                 })
         .then(() => {
-            closePopup(popupCreateNewCard);
+            popupElementPlace.close();
             formValidatorPlace.setButtonState();
-            formElementPlace.reset();
         })
         .catch((err) => {
             console.log(err);
@@ -146,12 +140,6 @@ function addJobInputValue() {
 };
 
 
-buttonPlaceFullToggle.addEventListener('click', function () {
-    const Popup = new PopupWithImage(popupPlaceFull);
-    Popup.close()
-});
-
-popupPlaceFull.addEventListener('click', closeByClickOverlay);
 
 buttonOpenPopupCreateCard.addEventListener('click', function () {
     popupElementPlace.open();
@@ -168,9 +156,11 @@ profileAvatar.addEventListener('click', function () {
     popupAvatarEdit.open();
 });
 
+const popup = new PopupWithImage(popupPlaceFull);
 const popupProfileEdit = new PopupWithForm(popupProfile, addProfileInfoSubmitHandler);
 const popupElementPlace = new PopupWithForm(popupCreateNewCard, addNewPlaceSubmitHandler);
 const popupAvatarEdit = new PopupWithForm(popupProfileAvatar, addProfileAvatarSubmitHandler);
+popup.setEventListeners();
 popupProfileEdit.setEventListeners();
 popupElementPlace.setEventListeners();
 popupAvatarEdit.setEventListeners();
