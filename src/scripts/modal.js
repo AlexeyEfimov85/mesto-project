@@ -5,7 +5,7 @@ export const buttonOpenPopupCreateCard = document.querySelector('.profile__butto
 export const buttonClosePopupCreateNewCard = document.querySelector('.popup__toggle_create-new-card');
 export const formElementPlace = document.querySelector('#form-place');
 export const buttonEdit = document.querySelector('.profile__button-edit');
-export const buttonPopupProfileToggle = popupProfile.querySelector('.popup__toggle');
+//export const buttonPopupProfileToggle = popupProfile.querySelector('.popup__toggle');
 export const popupPlaceFull = document.querySelector('#popup-place-full');
 export const buttonPlaceFullToggle = popupPlaceFull.querySelector('.popup__toggle');
 export const nameInput = document.forms.formProfile.querySelector('#form__item-username');
@@ -15,15 +15,15 @@ export const profileDescription = document.querySelector('.profile__description'
 export const profileAvatar = document.querySelector('.profile__avatar-container');
 export const profileAva = document.querySelector('.profile__avatar');
 export const popupProfileAvatar = document.querySelector('#popup-profile-foto');
-export const buttonClosePopupProfileAvatar = document.querySelector('.popup__toggle_profile-foto');
-export const avatarInput  = document.querySelector('#form__item-avatarlink');
+//export const buttonClosePopupProfileAvatar = document.querySelector('.popup__toggle_profile-foto');
+//export const avatarInput  = document.querySelector('#form__item-avatarlink');
 export const formAvatarEdit = document.querySelector('#form-profile-foto');
 
 
-export function openPopup(popup) {
+/*export function openPopup(popup) {
     popup.classList.add('popup_opened');
     document.addEventListener('keydown', closeByEsc);
-};
+};*/
 
 export function closePopup(popup) {
     popup.classList.remove('popup_opened');

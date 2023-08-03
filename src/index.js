@@ -2,10 +2,9 @@ import './pages/index.css';
 import { formProfileEdit, tuneValidation } from './scripts/util.js'
 import { placeTitleInput, placeLinkInput, Card } from "./scripts/Card.js";
 import {
-    openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile,
-    buttonOpenPopupCreateCard, buttonClosePopupCreateNewCard, formElementPlace, buttonEdit, buttonPopupProfileToggle,
-    popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading, profileTitle, profileDescription,
-    profileAvatar, popupProfileAvatar, buttonClosePopupProfileAvatar, avatarInput, formAvatarEdit, profileAva
+    closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile,
+    buttonOpenPopupCreateCard, formElementPlace, buttonEdit,     popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading, profileTitle, profileDescription,
+    profileAvatar, popupProfileAvatar, avatarInput, formAvatarEdit, profileAva
 } from './scripts/modal';
 import { cardContainerUserAdd } from './scripts/constants';
 import { FormValidator } from './scripts/FormValidator';
