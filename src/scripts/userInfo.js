@@ -1,25 +1,23 @@
-import  {api}  from "../index.js"
-import Section from "./section.js"
+
  export  class UserInfo{
-    constructor({selectorName,selectorDescription}){
+    constructor({selectorName,selectorDescription,selectorAvatar}){
         this._selectorName = selectorName
         this._selectorDescription = selectorDescription
+        this._selectorAvatar = selectorAvatar
+
     }
-    getUserInfo(){
-         return api.getProfileData()
-    }
+    getUserInfo(data){
+   return {
+            name: data.name,
+            about: data.about,
+            avatar : data.avatar
+         }
+        }
     setUserInfo(profile){
-        api.renderProfileData(profile)
-        .then((profileData) => {
-            const profile = new Section({items: profileData,
-            renderer: ()=>{
-           document.querySelector(this._selectorName).textContent = profileData.name;
-           document.querySelector(this._selectorDescription).textContent = profileData.about
-            }})
-            profile.renderItems()
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+           document.querySelector(this._selectorName).textContent = profile.name;
+           document.querySelector(this._selectorDescription).textContent = profile.about
+    }
+    setUserAvatar(avatar){
+        document.querySelector(this._selectorAvatar).src = avatar
     }
 }

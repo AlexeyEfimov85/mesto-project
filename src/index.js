@@ -1,39 +1,31 @@
 import './pages/index.css';
-import { formProfileEdit, tuneValidation } from './scripts/util.js'
-import { placeTitleInput, placeLinkInput, cardContainerUserAdd, Card } from "./scripts/cards.js";
-import {
-    openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile,
-    buttonOpenPopupCreateCard, buttonClosePopupCreateNewCard, formElementPlace, buttonEdit, buttonPopupProfileToggle,
-    popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading, profileTitle, profileDescription,
-    profileAvatar, popupProfileAvatar, buttonClosePopupProfileAvatar, avatarInput, formAvatarEdit, profileAva
-} from './scripts/modal';
-import { enableValidation, setButtonState, FormValidator } from './scripts/validate';
+import { formProfileEdit, tuneValidation, renderLoading } from './scripts/util.js'
+import { Card } from "./scripts/Card.js";
+import { cardContainerUserAdd, popupCreateNewCard, nameInput, jobInput, popupProfile,
+    buttonOpenPopupCreateCard, formElementPlace, buttonEdit, popupPlaceFull, profileTitle, profileDescription,
+    profileAvatar, popupProfileAvatar, formAvatarEdit, profileAva } from './scripts/constants';
+import { FormValidator } from './scripts/FormValidator';
 import { Api } from './scripts/api.js';
 import Section from "./scripts/section.js";
 import PopupWithForm from './scripts/PopupWithForm';
 import { UserInfo } from './scripts/userInfo';
-export let userID;
-export const api = new Api({
+import PopupWithImage from './scripts/PopupWithImage';
+ let userID;
+ const api = new Api({
     baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
     headers: {
         authorization: 'dff808ff-3720-4dec-bd88-6c3aa62f954a',
         'Content-Type': 'application/json',
     }
 })
-
-const userInfo =new UserInfo({selectorName: '.profile__title',selectorDescription : '.profile__description'})
-Promise.all([api.getCards(),userInfo.getUserInfo()])
+let placesList = null
+const userInfo = new UserInfo({ selectorName: '.profile__title', selectorDescription: '.profile__description',selectorAvatar: '.profile__avatar' })
+Promise.all([api.getCards(), api.getProfileData()])
     .then(([initialCards, profileData]) => {
-        const profile = new Section({
-            items: profileData,
-            renderer: (item) =>{
-                profileTitle.textContent = item.name;
-                profileDescription.textContent = item.about
-                profileAva.src = item.avatar;
-            }
-        })
-        userID = profileData._id   
-        const placesList = new Section({
+       userInfo.setUserInfo(profileData)
+       userInfo.setUserAvatar(profileData.avatar)
+       userID = profileData._id
+        placesList = new Section({
             items: initialCards,
             renderer: (item) => {
                 const arr = item.likes;
@@ -43,36 +35,40 @@ Promise.all([api.getCards(),userInfo.getUserInfo()])
                 const newNewArr = newArr.some(myId => {
                     return myId === userID
                 })
-                const card = new Card(item, '#card', newNewArr)
+                const card = new Card({data: item,handleCardClick: ()=>{
+                    const Popup = new PopupWithImage(popupPlaceFull);
+                   Popup.open(item.link,item.name)
+
+                } }, '#card', newNewArr,profileData._id,api)
+
                 const cardElement = card.generate()
                 placesList.addItem(cardElement)
             }
         }, '.places')
         placesList.renderItems()
-        profile.renderItems()
     })
     .catch((err) => {
         console.log(err);
     });
 
-function addProfileAvatarSubmitHandler(evt) {
-    evt.preventDefault();
+function addProfileAvatarSubmitHandler(data) {
     renderLoading(true);
     const avatar = {
-        avatar: avatarInput.value
+        avatar: data[0]
     };
     api.renderProfileAvatar(avatar)
-    .then((profileData) => {
-        const profile = new Section({items: profileData,
-        renderer: ()=>{
-        profileAva.src = profileData.avatar;
-        }})
-        profile.renderItems()
-    })
+        .then((profileData) => {
+            const profile = new Section({
+                items: profileData,
+                renderer: () => {
+                    profileAva.src = profileData.avatar;
+                }
+            })
+            profile.renderItems()
+        })
         .then(() => {
-            closePopup(popupProfileAvatar);
-            setButtonState();
-            evt.target.reset();
+            popupAvatarEdit.close();
+            formValidatorProfilePhoto.setButtonState();
         })
         .catch((err) => {
             console.log(err);
@@ -83,19 +79,23 @@ function addProfileAvatarSubmitHandler(evt) {
 
 }
 
-function addProfileInfoSubmitHandler(evt) {
-    evt.preventDefault();
+function addProfileInfoSubmitHandler(data) {
     renderLoading(true);
     const profile = {
-        name: nameInput.value,
-        about: jobInput.value
+        name: data[0],
+        about: data[1]
     };
-    userInfo.setUserInfo(profile)
-    userInfo.getUserInfo()
+    api.renderProfileData(profile).then((profileData) => {  
+       userInfo.setUserInfo(profileData)
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    api.getProfileData()
         .then(() => {
-            closePopup(popupProfile);
-            setButtonState();
-            evt.target.reset();
+            popupProfileEdit.close();
+            formValidatorProfile.setButtonState();
         })
         .catch((err) => {
             console.log(err);
@@ -104,40 +104,25 @@ function addProfileInfoSubmitHandler(evt) {
             renderLoading(false);
         })
 
-};
-function addNewPlaceSubmitHandler(evt) {
-    evt.preventDefault();
+    }
+function addNewPlaceSubmitHandler(data) {
     renderLoading(true);
     const cardData = {
-        name: placeTitleInput.value,
-        link: placeLinkInput.value
+        name: data[0],
+        link: data[1]
     }
     api.addCardToServer(cardData)
+        .then((result) => {
+            const card = new Card({data: result,handleCardClick: ()=>{
+                const Popup = new PopupWithImage(popupPlaceFull);
+               Popup.open(cardData.link,cardData.name)
+            } }, '#card', false,result.owner._id,api)
+            const cardElement = card.generate()
+            cardContainerUserAdd.prepend(cardElement)
+                })
         .then(() => {
-            api.getCards()
-            .then((initialCards)=>{
-                const placesList = new Section({
-                    items: initialCards,
-                    renderer: (item) => {
-                        const arr = item.likes;
-                        const newArr = arr.map(userid => {
-                            return userid._id;
-                        })
-                        const newNewArr = newArr.some(myId => {
-                            return myId === userID
-                        })
-                        const card = new Card(item, '#card', newNewArr)
-                        const cardElement = card.generate()
-                        placesList.addItem(cardElement)
-                    }
-                }, '.places')
-                placesList.renderItems()
-            })
-        })
-        .then(() => {
-            closePopup(popupCreateNewCard);
-            setButtonState();
-            evt.target.reset();
+            popupElementPlace.close();
+            formValidatorPlace.setButtonState();
         })
         .catch((err) => {
             console.log(err);
@@ -155,58 +140,27 @@ function addJobInputValue() {
 };
 
 
-buttonPlaceFullToggle.addEventListener('click', function () {
-    closePopup(popupPlaceFull);
-});
-
-popupPlaceFull.addEventListener('click', closeByClickOverlay);
 
 buttonOpenPopupCreateCard.addEventListener('click', function () {
-    openPopup(popupCreateNewCard);
+    popupElementPlace.open();
 });
-/*buttonClosePopupCreateNewCard.addEventListener('click', function () {
-    closePopup(popupCreateNewCard);
-});
-popupCreateNewCard.addEventListener('click', function (evt) {
-    if (evt.target.classList.contains('popup')) {
-        closePopup(popupCreateNewCard);
-    }
-});*/
+
 
 buttonEdit.addEventListener('click', function () {
     popupProfileEdit.open();
-    //openPopup(popupProfile);
     addNameInputValue();
     addJobInputValue();
 });
-/*buttonPopupProfileToggle.addEventListener('click', function () {
-    closePopup(popupProfile);
-});*/
-/*popupProfile.addEventListener('click', function (evt) {
-    if (evt.target.classList.contains('popup')) {
-        closePopup(popupProfile);
-    }
-});*/
 
 profileAvatar.addEventListener('click', function () {
-    openPopup(popupProfileAvatar);
+    popupAvatarEdit.open();
 });
-/*popupProfileAvatar.addEventListener('click', function (evt) {
-    if (evt.target.classList.contains('popup')) {
-        closePopup(popupProfileAvatar);
-    }
-});
-buttonClosePopupProfileAvatar.addEventListener('click', function () {
-    closePopup(popupProfileAvatar);
-});*/
 
-/*formProfileEdit.addEventListener('submit', addProfileInfoSubmitHandler);
-formElementPlace.addEventListener('submit', addNewPlaceSubmitHandler);
-formAvatarEdit.addEventListener('submit', addProfileAvatarSubmitHandler);*/
-
+const popup = new PopupWithImage(popupPlaceFull);
 const popupProfileEdit = new PopupWithForm(popupProfile, addProfileInfoSubmitHandler);
 const popupElementPlace = new PopupWithForm(popupCreateNewCard, addNewPlaceSubmitHandler);
 const popupAvatarEdit = new PopupWithForm(popupProfileAvatar, addProfileAvatarSubmitHandler);
+popup.setEventListeners();
 popupProfileEdit.setEventListeners();
 popupElementPlace.setEventListeners();
 popupAvatarEdit.setEventListeners();
@@ -217,8 +171,3 @@ const formValidatorProfilePhoto = new FormValidator(tuneValidation, formAvatarEd
 formValidatorProfile.enableValidation();
 formValidatorPlace.enableValidation();
 formValidatorProfilePhoto.enableValidation()
-
-api.getCards()
-    .then((result) => {
-        console.log(result)
-    })

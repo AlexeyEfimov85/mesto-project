@@ -1,21 +1,28 @@
 import Popup from "./popup";
-export default class PopupWithForm extends Popup{
+export default class PopupWithForm extends Popup {
     constructor(selector, submitFormFunction) {
         super(selector);
         this._submitFormFunction = submitFormFunction;
     }
 
     _getInputValues() {
-      // не вижу смысла в этом методе, ведь мы передаем целиком функцию где описан сбор данных  из формы  
+        const formData = Array.from(this._popup.querySelectorAll('.form__item')).map(function (item) {
+            return  item.value;
+        })
+        return formData;
     };
 
     setEventListeners() {
         super.setEventListeners();
-        this._popup.addEventListener('submit', this._submitFormFunction)
+        this._popup.addEventListener('submit', (evt) => {
+            evt.preventDefault();
+            this._submitFormFunction(this._getInputValues());
+        })
     };
 
     close() {
         super.close();
         this._popup.querySelector('.form').reset();
     }
+
 }
