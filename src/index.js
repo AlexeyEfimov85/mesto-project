@@ -1,39 +1,35 @@
 import './pages/index.css';
 import { formProfileEdit, tuneValidation } from './scripts/util.js'
-import { placeTitleInput, placeLinkInput, cardContainerUserAdd, Card } from "./scripts/cards.js";
+import { placeTitleInput, placeLinkInput, Card } from "./scripts/Card.js";
 import {
     openPopup, closePopup, popupCreateNewCard, nameInput, jobInput, popupProfile,
     buttonOpenPopupCreateCard, buttonClosePopupCreateNewCard, formElementPlace, buttonEdit, buttonPopupProfileToggle,
     popupPlaceFull, buttonPlaceFullToggle, closeByClickOverlay, renderLoading, profileTitle, profileDescription,
     profileAvatar, popupProfileAvatar, buttonClosePopupProfileAvatar, avatarInput, formAvatarEdit, profileAva
 } from './scripts/modal';
+import { cardContainerUserAdd } from './scripts/constants';
 import { FormValidator } from './scripts/FormValidator';
 import { Api } from './scripts/api.js';
 import Section from "./scripts/section.js";
 import PopupWithForm from './scripts/PopupWithForm';
 import { UserInfo } from './scripts/userInfo';
-export let userID;
-export const api = new Api({
+import PopupWithImage from './scripts/PopupWithImage';
+ let userID;
+ const api = new Api({
     baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
     headers: {
         authorization: 'dff808ff-3720-4dec-bd88-6c3aa62f954a',
         'Content-Type': 'application/json',
     }
 })
-
-const userInfo = new UserInfo({ selectorName: '.profile__title', selectorDescription: '.profile__description' })
-Promise.all([api.getCards(), userInfo.getUserInfo()])
+let placesList = null
+const userInfo = new UserInfo({ selectorName: '.profile__title', selectorDescription: '.profile__description',selectorAvatar: '.profile__avatar' })
+Promise.all([api.getCards(), api.getProfileData()])
     .then(([initialCards, profileData]) => {
-        const profile = new Section({
-            items: profileData,
-            renderer: (item) => {
-                profileTitle.textContent = item.name;
-                profileDescription.textContent = item.about
-                profileAva.src = item.avatar;
-            }
-        })
-        userID = profileData._id
-        const placesList = new Section({
+       userInfo.setUserInfo(profileData)
+       userInfo.setUserAvatar(profileData.avatar)
+       userID = profileData._id
+        placesList = new Section({
             items: initialCards,
             renderer: (item) => {
                 const arr = item.likes;
@@ -43,13 +39,16 @@ Promise.all([api.getCards(), userInfo.getUserInfo()])
                 const newNewArr = newArr.some(myId => {
                     return myId === userID
                 })
-                const card = new Card(item, '#card', newNewArr)
+                const card = new Card({data: item,handleCardClick: ()=>{
+                    const Popup = new PopupWithImage(popupPlaceFull);
+                   Popup.open(item.link,item.name)
+                } }, '#card', newNewArr,profileData._id,api)
+
                 const cardElement = card.generate()
                 placesList.addItem(cardElement)
             }
         }, '.places')
         placesList.renderItems()
-        profile.renderItems()
     })
     .catch((err) => {
         console.log(err);
@@ -90,8 +89,14 @@ function addProfileInfoSubmitHandler(data) {
         name: data[0],
         about: data[1]
     };
-    userInfo.setUserInfo(profile)
-    userInfo.getUserInfo()
+    api.renderProfileData(profile).then((profileData) => {  
+       userInfo.setUserInfo(profileData)
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    api.getProfileData()
         .then(() => {
             closePopup(popupProfile);
             formValidatorProfile.setButtonState();
@@ -104,7 +109,7 @@ function addProfileInfoSubmitHandler(data) {
             renderLoading(false);
         })
 
-};
+    }
 function addNewPlaceSubmitHandler(data) {
     renderLoading(true);
     const cardData = {
@@ -112,27 +117,14 @@ function addNewPlaceSubmitHandler(data) {
         link: data[1]
     }
     api.addCardToServer(cardData)
-        .then(() => {
-            api.getCards()
-                .then((initialCards) => {
-                    const placesList = new Section({
-                        items: initialCards,
-                        renderer: (item) => {
-                            const arr = item.likes;
-                            const newArr = arr.map(userid => {
-                                return userid._id;
-                            })
-                            const newNewArr = newArr.some(myId => {
-                                return myId === userID
-                            })
-                            const card = new Card(item, '#card', newNewArr)
-                            const cardElement = card.generate()
-                            placesList.addItem(cardElement)
-                        }
-                    }, '.places')
-                    placesList.renderItems()
+        .then((result) => {
+            const card = new Card({data: result,handleCardClick: ()=>{
+                const Popup = new PopupWithImage(popupPlaceFull);
+               Popup.open(cardData.link,cardData.name)
+            } }, '#card', false,result.owner._id,api)
+            const cardElement = card.generate()
+            cardContainerUserAdd.prepend(cardElement)
                 })
-        })
         .then(() => {
             closePopup(popupCreateNewCard);
             formValidatorPlace.setButtonState();
@@ -188,8 +180,3 @@ const formValidatorProfilePhoto = new FormValidator(tuneValidation, formAvatarEd
 formValidatorProfile.enableValidation();
 formValidatorPlace.enableValidation();
 formValidatorProfilePhoto.enableValidation()
-
-api.getCards()
-    .then((result) => {
-        console.log(result)
-    })
