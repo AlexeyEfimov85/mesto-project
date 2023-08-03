@@ -1,9 +1,4 @@
-export const popupPlaceFull = document.querySelector('#popup-place-full');
-export const popupPlaceFullImage = popupPlaceFull.querySelector('#card-image');
-export const popupPlaceFullTitle = popupPlaceFull.querySelector('.popup__image-title');
-export const placeTitleInput = document.querySelector('#form__item-placetitle');
-export const placeLinkInput = document.querySelector('#form__item-placelink');
-export const cardContainerUserAdd = document.querySelector('.places');
+ 
 export class Card {
     constructor({data ,handleCardClick}, selector, newNewArr,userID,api) {
         this._selector = selector
@@ -31,9 +26,9 @@ export class Card {
         this._element.querySelector('.card__title').textContent = this._name
         this._element.querySelector('.card__image').alt = this._name
         this._element.querySelector('.card__like-sum').textContent = this._likes
-        this._setEventListeners()
         this._checkAuthorCard()
         this._checkLikeCard()
+        this._setEventListeners()
 
         return this._element
     }
