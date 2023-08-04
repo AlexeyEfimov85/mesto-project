@@ -1,6 +1,6 @@
- 
+
 export class Card {
-    constructor({data ,handleCardClick}, selector, newNewArr,userID,api) {
+    constructor({ data, handleCardClick }, selector, newNewArr, userID, api) {
         this._selector = selector
         this._name = data.name
         this._link = data.link
@@ -9,7 +9,7 @@ export class Card {
         this._id = data.owner._id
         this._cardID = data._id
         this._handleCardClick = handleCardClick
-        this._userID= userID
+        this._userID = userID
         this._api = api
     }
     _getElement() {
@@ -42,44 +42,22 @@ export class Card {
             this._element.querySelector('.card__button').classList.add('card__button_checked');
         };
     }
-    LikeCard(evt) {
+    LikeCard(evt,res) {
         if (evt.target.classList.contains('card__button_checked')) {
-            this._api.deleteLike(this._cardID)
-                .then((res) => {
-                    evt.target.classList.remove('card__button_checked');
-                    this._element.querySelector('.card__like-sum').textContent = res.likes.length;
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
+            evt.target.classList.remove('card__button_checked');
+            this._element.querySelector('.card__like-sum').textContent = res.likes.length;
         } else {
-            this._api.sendLike(this._cardID)
-                .then((res) => {
-                    evt.target.classList.add('card__button_checked');
-                    this._element.querySelector('.card__like-sum').textContent = res.likes.length;
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
+            evt.target.classList.add('card__button_checked');
+            this._element.querySelector('.card__like-sum').textContent = res.likes.length;
         }
     }
-    deletCard(evt) {
-        this._api.deleteCards(this._cardID)
-            .then(() => {
-                evt.target.closest('.card').remove();
-            }).catch((err) => {
-                console.log(err);
-            });
+    deletCard() {
+        this._element.remove();
+        this._element = null
     }
-    
+
     _setEventListeners() {
-        this._element.querySelector('.card__button').addEventListener('click',  (evt) => {
-            this.LikeCard(evt)
-        })
-        this._element.querySelector('.card__trash').addEventListener('click',  (evt)=> {
-            this.deletCard(evt)
-        })
-        this._element.querySelector('.card__image').addEventListener('click',  (evt) =>{
+        this._element.querySelector('.card__image').addEventListener('click', (evt) => {
             this._handleCardClick(evt)
         })
     }
