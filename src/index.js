@@ -12,6 +12,7 @@ import Section from "./scripts/section.js";
 import PopupWithForm from './scripts/PopupWithForm';
 import { UserInfo } from './scripts/userInfo';
 import PopupWithImage from './scripts/PopupWithImage';
+
 let userID;
 const api = new Api({
     baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
@@ -39,19 +40,17 @@ let placesList = null
                 })
                 const card = new Card({
                     data: item, handleCardClick: () => {
-                        const PopupImage = new PopupWithImage(popupPlaceFull);
-                        PopupImage.open(item.link, item.name)
+                        popupImage.open(item.link, item.name)
 
                     }
-                }, '#card', newNewArr, profileData._id, api)
-
+                }, '#card', newNewArr, profileData._id)
                 const cardElement = card.generate()
                 cardElement.querySelector('.card__trash').addEventListener('click', () => {
                     api.deleteCards(item._id)
+                    .then(()=> card.deletCard())
                         .catch((err) => {
                             console.log(err);
                         });
-                    card.deletCard()
                 })
                 cardElement.querySelector('.card__button').addEventListener('click', (evt) => {
                     if (evt.target.classList.contains('card__button_checked')) {
@@ -91,15 +90,7 @@ function addProfileAvatarSubmitHandler(data) {
     };
     api.renderProfileAvatar(avatar)
         .then((profileData) => {
-            const profile = new Section({
-                items: profileData,
-                renderer: () => {
-                    profileAva.src = profileData.avatar;
-                }
-            })
-            profile.renderItems()
-        })
-        .then(() => {
+            userInfo.setUserInfo(profileData)
             popupAvatarEdit.close();
             formValidatorProfilePhoto.setButtonState();
         })
@@ -148,10 +139,9 @@ function addNewPlaceSubmitHandler(data) {
         .then((result) => {
             const card = new Card({
                 data: result, handleCardClick: () => {
-                    const PopupImage = new PopupWithImage(popupPlaceFull);
-                    PopupImage.open(cardData.link, cardData.name)
+                    popupImage.open(cardData.link, cardData.name)
                 }
-            }, '#card', false, result.owner._id, api)
+            }, '#card', false, result.owner._id)
             const cardElement = card.generate()
             placesList.addItem(cardElement)
         })
@@ -183,12 +173,11 @@ buttonEdit.addEventListener('click', function () {
 profileAvatar.addEventListener('click', function () {
     popupAvatarEdit.open();
 });
-
-const popup = new PopupWithImage(popupPlaceFull);
+const popupImage = new PopupWithImage(popupPlaceFull);
 const popupProfileEdit = new PopupWithForm(popupProfile, addProfileInfoSubmitHandler);
 const popupElementPlace = new PopupWithForm(popupCreateNewCard, addNewPlaceSubmitHandler);
 const popupAvatarEdit = new PopupWithForm(popupProfileAvatar, addProfileAvatarSubmitHandler);
-popup.setEventListeners();
+popupImage.setEventListeners();
 popupProfileEdit.setEventListeners();
 popupElementPlace.setEventListeners();
 popupAvatarEdit.setEventListeners();

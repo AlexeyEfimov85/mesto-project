@@ -1,6 +1,6 @@
 
 export class Card {
-    constructor({ data, handleCardClick }, selector, newNewArr, userID, api) {
+    constructor({ data, handleCardClick }, selector, newNewArr, userID) {
         this._selector = selector
         this._name = data.name
         this._link = data.link
@@ -10,7 +10,6 @@ export class Card {
         this._cardID = data._id
         this._handleCardClick = handleCardClick
         this._userID = userID
-        this._api = api
     }
     _getElement() {
         const cardElement = document.
