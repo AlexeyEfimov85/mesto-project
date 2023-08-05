@@ -1,17 +1,19 @@
 import './pages/index.css';
 import { formProfileEdit, tuneValidation, renderLoading } from './scripts/util.js'
 import { Card } from "./scripts/Card.js";
-import { cardContainerUserAdd, popupCreateNewCard, nameInput, jobInput, popupProfile,
+import {
+    cardContainerUserAdd, popupCreateNewCard, nameInput, jobInput, popupProfile,
     buttonOpenPopupCreateCard, formElementPlace, buttonEdit, popupPlaceFull, profileTitle, profileDescription,
-    profileAvatar, popupProfileAvatar, formAvatarEdit, profileAva } from './scripts/constants';
+    profileAvatar, popupProfileAvatar, formAvatarEdit, profileAva
+} from './scripts/constants';
 import { FormValidator } from './scripts/FormValidator';
 import { Api } from './scripts/api.js';
 import Section from "./scripts/section.js";
 import PopupWithForm from './scripts/PopupWithForm';
 import { UserInfo } from './scripts/userInfo';
 import PopupWithImage from './scripts/PopupWithImage';
- let userID;
- const api = new Api({
+let userID;
+const api = new Api({
     baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26/',
     headers: {
         authorization: 'dff808ff-3720-4dec-bd88-6c3aa62f954a',
@@ -19,12 +21,12 @@ import PopupWithImage from './scripts/PopupWithImage';
     }
 })
 let placesList = null
-const userInfo = new UserInfo({ selectorName: '.profile__title', selectorDescription: '.profile__description',selectorAvatar: '.profile__avatar' })
-Promise.all([api.getCards(), api.getProfileData()])
+  function renderPage(){
+    return Promise.all([api.getCards(), api.getProfileData()])
     .then(([initialCards, profileData]) => {
-       userInfo.setUserInfo(profileData)
-       userInfo.setUserAvatar(profileData.avatar)
-       userID = profileData._id
+        userInfo.setUserInfo(profileData)
+        userInfo.setUserAvatar(profileData.avatar)
+        userID = profileData._id
         placesList = new Section({
             items: initialCards,
             renderer: (item) => {
@@ -35,25 +37,27 @@ Promise.all([api.getCards(), api.getProfileData()])
                 const newNewArr = newArr.some(myId => {
                     return myId === userID
                 })
-                const card = new Card({data: item,handleCardClick: ()=>{
-                    const PopupImage = new PopupWithImage(popupPlaceFull);
-                    PopupImage.open(item.link,item.name)
+                const card = new Card({
+                    data: item, handleCardClick: () => {
+                        const PopupImage = new PopupWithImage(popupPlaceFull);
+                        PopupImage.open(item.link, item.name)
 
-                } }, '#card', newNewArr,profileData._id,api)
+                    }
+                }, '#card', newNewArr, profileData._id, api)
 
                 const cardElement = card.generate()
-                cardElement.querySelector('.card__trash').addEventListener('click',  ()=> {
+                cardElement.querySelector('.card__trash').addEventListener('click', () => {
                     api.deleteCards(item._id)
-                    .catch((err) => {
+                        .catch((err) => {
                             console.log(err);
                         });
-                        card.deletCard()
+                    card.deletCard()
                 })
-                cardElement.querySelector('.card__button').addEventListener('click',  (evt) => {
+                cardElement.querySelector('.card__button').addEventListener('click', (evt) => {
                     if (evt.target.classList.contains('card__button_checked')) {
                         api.deleteLike(item._id)
                             .then((res) => {
-                              card.LikeCard(evt,res)
+                                card.LikeCard(evt, res)
                             })
                             .catch((err) => {
                                 console.log(err);
@@ -61,7 +65,7 @@ Promise.all([api.getCards(), api.getProfileData()])
                     } else {
                         api.sendLike(item._id)
                             .then((res) => {
-                                card.LikeCard(evt,res)
+                                card.LikeCard(evt, res)
                             })
                             .catch((err) => {
                                 console.log(err);
@@ -77,6 +81,9 @@ Promise.all([api.getCards(), api.getProfileData()])
         console.log(err);
     });
 
+}
+const userInfo = new UserInfo({ selectorName: '.profile__title', selectorDescription: '.profile__description', selectorAvatar: '.profile__avatar' })
+renderPage()
 function addProfileAvatarSubmitHandler(data) {
     renderLoading(true);
     const avatar = {
@@ -111,12 +118,12 @@ function addProfileInfoSubmitHandler(data) {
         name: data[0],
         about: data[1]
     };
-    api.renderProfileData(profile).then((profileData) => {  
-       userInfo.setUserInfo(profileData)
+    api.renderProfileData(profile).then((profileData) => {
+        userInfo.setUserInfo(profileData)
     })
-    .catch((err) => {
-        console.log(err);
-    });
+        .catch((err) => {
+            console.log(err);
+        });
 
     api.getProfileData()
         .then(() => {
@@ -130,7 +137,7 @@ function addProfileInfoSubmitHandler(data) {
             renderLoading(false);
         })
 
-    }
+}
 function addNewPlaceSubmitHandler(data) {
     renderLoading(true);
     const cardData = {
@@ -139,70 +146,17 @@ function addNewPlaceSubmitHandler(data) {
     }
     api.addCardToServer(cardData)
         .then((result) => {
-            const card = new Card({data: result,handleCardClick: ()=>{
-                const PopupImage = new PopupWithImage(popupPlaceFull);
-               PopupImage.open(cardData.link,cardData.name)
-            } }, '#card', false,result.owner._id,api)
+            const card = new Card({
+                data: result, handleCardClick: () => {
+                    const PopupImage = new PopupWithImage(popupPlaceFull);
+                    PopupImage.open(cardData.link, cardData.name)
+                }
+            }, '#card', false, result.owner._id, api)
             const cardElement = card.generate()
             placesList.addItem(cardElement)
-                })
-        .then(() => {    
-        Promise.all([api.getCards(), api.getProfileData()])
-    .then(([initialCards, profileData]) => {
-       userInfo.setUserInfo(profileData)
-       userInfo.setUserAvatar(profileData.avatar)
-       userID = profileData._id
-        placesList = new Section({
-            items: initialCards,
-            renderer: (item) => {
-                const arr = item.likes;
-                const newArr = arr.map(userid => {
-                    return userid._id;
-                })
-                const newNewArr = newArr.some(myId => {
-                    return myId === userID
-                })
-                const card = new Card({data: item,handleCardClick: ()=>{
-                    const PopupImage = new PopupWithImage(popupPlaceFull);
-                    PopupImage.open(item.link,item.name)
-
-                } }, '#card', newNewArr,profileData._id,api)
-
-                const cardElement = card.generate()
-                cardElement.querySelector('.card__trash').addEventListener('click',  ()=> {
-                    api.deleteCards(item._id)
-                    .catch((err) => {
-                            console.log(err);
-                        });
-                        card.deletCard()
-                })
-                cardElement.querySelector('.card__button').addEventListener('click',  (evt) => {
-                    if (evt.target.classList.contains('card__button_checked')) {
-                        api.deleteLike(item._id)
-                            .then((res) => {
-                              card.LikeCard(evt,res)
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            })
-                    } else {
-                        api.sendLike(item._id)
-                            .then((res) => {
-                                card.LikeCard(evt,res)
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            })
-                    }
-                })
-                placesList.addItem(cardElement)
-            }
-        }, '.places')
-        placesList.renderItems()
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+        })
+        .then(() => {
+            renderPage()
             popupElementPlace.close();
             formValidatorPlace.setButtonState();
         })
