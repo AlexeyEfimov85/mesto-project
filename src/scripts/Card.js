@@ -1,4 +1,3 @@
-
 export class Card {
     constructor({ data, handleCardClick }, selector, newNewArr, userID) {
         this._selector = selector

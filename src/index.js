@@ -22,8 +22,7 @@ const api = new Api({
     }
 })
 let placesList = null
-  function renderPage(){
-    return Promise.all([api.getCards(), api.getProfileData()])
+ Promise.all([api.getCards(), api.getProfileData()])
     .then(([initialCards, profileData]) => {
         userInfo.setUserInfo(profileData)
         userInfo.setUserAvatar(profileData.avatar)
@@ -80,9 +79,7 @@ let placesList = null
         console.log(err);
     });
 
-}
 const userInfo = new UserInfo({ selectorName: '.profile__title', selectorDescription: '.profile__description', selectorAvatar: '.profile__avatar' })
-renderPage()
 function addProfileAvatarSubmitHandler(data) {
     renderLoading(true);
     const avatar = {
@@ -143,10 +140,35 @@ function addNewPlaceSubmitHandler(data) {
                 }
             }, '#card', false, result.owner._id)
             const cardElement = card.generate()
-            placesList.addItem(cardElement)
+            cardElement.querySelector('.card__trash').addEventListener('click', () => {
+                api.deleteCards(result._id)
+                .then(()=> card.deletCard())
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            })
+            cardElement.querySelector('.card__button').addEventListener('click', (evt) => {
+                if (evt.target.classList.contains('card__button_checked')) {
+                    api.deleteLike(result._id)
+                        .then((res) => {
+                            card.LikeCard(evt, res)
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        })
+                } else {
+                    api.sendLike(result._id)
+                        .then((res) => {
+                            card.LikeCard(evt, res)
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        })
+                }
+            })
+            placesList.addItemToStart(cardElement)
         })
         .then(() => {
-            renderPage()
             popupElementPlace.close();
             formValidatorPlace.setButtonState();
         })
