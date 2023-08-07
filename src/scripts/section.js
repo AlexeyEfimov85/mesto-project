@@ -7,17 +7,16 @@
     addItem(element){
         this._container.append(element);
     }
+    addItemToStart(element){
+        this._container.prepend(element);
+    }
     _clear() {
         this._container.innerHTML = '';
       }
-    renderItems(){
-        if(Array.isArray(this._renderedItems)){
+    renderItems(){ 
             this._clear()
         this._renderedItems.forEach(item => {
             this._renderer(item);
           })
-        }else{
-            this._renderer(this._renderedItems)
-        }
     }
 }

@@ -9,8 +9,4 @@ export default class PopupWithImage extends Popup{
         this._popup.querySelector('.popup__image').alt = name
         this._popup.querySelector('.popup__image-title').textContent = name
     }
-    close() {
-        super.close();
-    }
-
 }
