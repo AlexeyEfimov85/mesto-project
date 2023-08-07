@@ -119,19 +119,6 @@ function addProfileInfoSubmitHandler(data) {
         popupProfileEdit.renderLoading(false);
     });
 
-
-    /*api.getProfileData()
-        .then(() => {
-            popupProfileEdit.close();
-            formValidatorProfile.setButtonState();
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-        .finally(() => {
-
-            popupProfileEdit.renderLoading(false);
-        })*/
     }
 
 function addNewPlaceSubmitHandler(data) {
