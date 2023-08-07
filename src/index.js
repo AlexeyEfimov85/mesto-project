@@ -1,5 +1,5 @@
 import './pages/index.css';
-import { formProfileEdit, tuneValidation, renderLoading } from './scripts/util.js'
+import { formProfileEdit, tuneValidation } from './scripts/util.js'
 import { Card } from "./scripts/Card.js";
 import {
     cardContainerUserAdd, popupCreateNewCard, nameInput, jobInput, popupProfile,
@@ -81,7 +81,7 @@ let placesList = null
 
 const userInfo = new UserInfo({ selectorName: '.profile__title', selectorDescription: '.profile__description', selectorAvatar: '.profile__avatar' })
 function addProfileAvatarSubmitHandler(data) {
-    renderLoading(true);
+    popupAvatarEdit.renderLoading(true);
     const avatar = {
         avatar: data[0]
     };
@@ -95,25 +95,32 @@ function addProfileAvatarSubmitHandler(data) {
             console.log(err);
         })
         .finally(() => {
-            renderLoading(false);
+            popupAvatarEdit.renderLoading(false);
         })
 
 }
 
 function addProfileInfoSubmitHandler(data) {
-    renderLoading(true);
+    popupProfileEdit.renderLoading(true);
     const profile = {
         name: data[0],
         about: data[1]
     };
-    api.renderProfileData(profile).then((profileData) => {
-        userInfo.setUserInfo(profileData)
-    })
-        .catch((err) => {
-            console.log(err);
-        });
 
-    api.getProfileData()
+    api.renderProfileData(profile).then((profileData) => {  
+       userInfo.setUserInfo(profileData)
+       popupProfileEdit.close();
+       formValidatorProfile.setButtonState();
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+    .finally(() => {
+        popupProfileEdit.renderLoading(false);
+    });
+
+
+    /*api.getProfileData()
         .then(() => {
             popupProfileEdit.close();
             formValidatorProfile.setButtonState();
@@ -122,12 +129,13 @@ function addProfileInfoSubmitHandler(data) {
             console.log(err);
         })
         .finally(() => {
-            renderLoading(false);
-        })
 
-}
+            popupProfileEdit.renderLoading(false);
+        })*/
+    }
+
 function addNewPlaceSubmitHandler(data) {
-    renderLoading(true);
+    popupElementPlace.renderLoading(true);
     const cardData = {
         name: data[0],
         link: data[1]
@@ -139,7 +147,10 @@ function addNewPlaceSubmitHandler(data) {
                     popupImage.open(cardData.link, cardData.name)
                 }
             }, '#card', false, result.owner._id)
-            const cardElement = card.generate()
+            const cardElement = card.generate();
+            popupElementPlace.close();
+            formValidatorPlace.setButtonState();
+
             cardElement.querySelector('.card__trash').addEventListener('click', () => {
                 api.deleteCards(result._id)
                 .then(()=> card.deletCard())
@@ -168,15 +179,12 @@ function addNewPlaceSubmitHandler(data) {
             })
             placesList.addItemToStart(cardElement)
         })
-        .then(() => {
-            popupElementPlace.close();
-            formValidatorPlace.setButtonState();
-        })
+        
         .catch((err) => {
             console.log(err);
         })
         .finally(() => {
-            renderLoading(false);
+            popupElementPlace.renderLoading(false);
         })
 }
 
@@ -188,13 +196,16 @@ buttonOpenPopupCreateCard.addEventListener('click', function () {
 
 buttonEdit.addEventListener('click', function () {
     popupProfileEdit.open();
+
     nameInput.value = userInfo.getUserInfo().name
     jobInput.value = userInfo.getUserInfo().about
+
 });
 
 profileAvatar.addEventListener('click', function () {
     popupAvatarEdit.open();
 });
+
 const popupImage = new PopupWithImage(popupPlaceFull);
 const popupProfileEdit = new PopupWithForm(popupProfile, addProfileInfoSubmitHandler);
 const popupElementPlace = new PopupWithForm(popupCreateNewCard, addNewPlaceSubmitHandler);
