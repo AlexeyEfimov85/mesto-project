@@ -1,5 +1,5 @@
 import './pages/index.css';
-import { formProfileEdit, tuneValidation, renderLoading } from './scripts/util.js'
+import { formProfileEdit, tuneValidation } from './scripts/util.js'
 import { Card } from "./scripts/Card.js";
 import { cardContainerUserAdd, popupCreateNewCard, nameInput, jobInput, popupProfile,
     buttonOpenPopupCreateCard, formElementPlace, buttonEdit, popupPlaceFull, profileTitle, profileDescription,
@@ -52,7 +52,7 @@ Promise.all([api.getCards(), api.getProfileData()])
     });
 
 function addProfileAvatarSubmitHandler(data) {
-    renderLoading(true);
+    popupAvatarEdit.renderLoading(true);
     const avatar = {
         avatar: data[0]
     };
@@ -74,25 +74,30 @@ function addProfileAvatarSubmitHandler(data) {
             console.log(err);
         })
         .finally(() => {
-            renderLoading(false);
+            popupAvatarEdit.renderLoading(false);
         })
 
 }
 
 function addProfileInfoSubmitHandler(data) {
-    renderLoading(true);
+    popupProfileEdit.renderLoading(true);
     const profile = {
         name: data[0],
         about: data[1]
     };
     api.renderProfileData(profile).then((profileData) => {  
        userInfo.setUserInfo(profileData)
+       popupProfileEdit.close();
+       formValidatorProfile.setButtonState();
     })
     .catch((err) => {
         console.log(err);
+    })
+    .finally(() => {
+        popupProfileEdit.renderLoading(false);
     });
 
-    api.getProfileData()
+    /*api.getProfileData()
         .then(() => {
             popupProfileEdit.close();
             formValidatorProfile.setButtonState();
@@ -101,12 +106,11 @@ function addProfileInfoSubmitHandler(data) {
             console.log(err);
         })
         .finally(() => {
-            renderLoading(false);
-        })
-
+            popupProfileEdit.renderLoading(false);
+        })*/
     }
 function addNewPlaceSubmitHandler(data) {
-    renderLoading(true);
+    popupElementPlace.renderLoading(true);
     const cardData = {
         name: data[0],
         link: data[1]
@@ -119,16 +123,14 @@ function addNewPlaceSubmitHandler(data) {
             } }, '#card', false,result.owner._id,api)
             const cardElement = card.generate()
             cardContainerUserAdd.prepend(cardElement)
-                })
-        .then(() => {
             popupElementPlace.close();
             formValidatorPlace.setButtonState();
-        })
+                })
         .catch((err) => {
             console.log(err);
         })
         .finally(() => {
-            renderLoading(false);
+            popupElementPlace.renderLoading(false);
         })
 }
 
@@ -150,17 +152,19 @@ buttonEdit.addEventListener('click', function () {
     popupProfileEdit.open();
     addNameInputValue();
     addJobInputValue();
+    //nameInput.value = 
+    //jobInput.value =
 });
 
 profileAvatar.addEventListener('click', function () {
     popupAvatarEdit.open();
 });
 
-const popup = new PopupWithImage(popupPlaceFull);
+const popupImage = new PopupWithImage(popupPlaceFull);
 const popupProfileEdit = new PopupWithForm(popupProfile, addProfileInfoSubmitHandler);
 const popupElementPlace = new PopupWithForm(popupCreateNewCard, addNewPlaceSubmitHandler);
 const popupAvatarEdit = new PopupWithForm(popupProfileAvatar, addProfileAvatarSubmitHandler);
-popup.setEventListeners();
+popupImage.setEventListeners();
 popupProfileEdit.setEventListeners();
 popupElementPlace.setEventListeners();
 popupAvatarEdit.setEventListeners();
