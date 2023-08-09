@@ -22,6 +22,36 @@ const api = new Api({
     }
 })
 let placesList = null
+function createdCard (item, newNewArr,userID){
+  const card = new Card({
+        data: item, handleCardClick: () => {
+            popupImage.open(item.link, item.name)
+        },handleDeleteClick: () => {
+            api.deleteCards(item._id)
+                    .then(()=> card.deletCard())
+                    .catch((err) => console.log(err));
+        },handleLikeClick: (evt) =>{
+            if (evt.target.classList.contains('card__button_checked')) {
+                api.deleteLike(item._id)
+                    .then((res) => {
+                        card.LikeCard(evt, res)
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            } else {
+                api.sendLike(item._id)
+                    .then((res) => {
+                        card.LikeCard(evt, res)
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            }
+        }
+    }, '#card', newNewArr, userID)
+    return card
+}
  Promise.all([api.getCards(), api.getProfileData()])
     .then(([initialCards, profileData]) => {
         userInfo.setUserInfo(profileData)
@@ -37,39 +67,8 @@ let placesList = null
                 const newNewArr = newArr.some(myId => {
                     return myId === userID
                 })
-                const card = new Card({
-                    data: item, handleCardClick: () => {
-                        popupImage.open(item.link, item.name)
-
-                    }
-                }, '#card', newNewArr, profileData._id)
+                const card = createdCard (item,newNewArr,userID)
                 const cardElement = card.generate()
-                cardElement.querySelector('.card__trash').addEventListener('click', () => {
-                    api.deleteCards(item._id)
-                    .then(()=> card.deletCard())
-                        .catch((err) => {
-                            console.log(err);
-                        });
-                })
-                cardElement.querySelector('.card__button').addEventListener('click', (evt) => {
-                    if (evt.target.classList.contains('card__button_checked')) {
-                        api.deleteLike(item._id)
-                            .then((res) => {
-                                card.LikeCard(evt, res)
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            })
-                    } else {
-                        api.sendLike(item._id)
-                            .then((res) => {
-                                card.LikeCard(evt, res)
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            })
-                    }
-                })
                 placesList.addItem(cardElement)
             }
         }, '.places')
@@ -87,7 +86,7 @@ function addProfileAvatarSubmitHandler(data) {
     };
     api.renderProfileAvatar(avatar)
         .then((profileData) => {
-            userInfo.setUserInfo(profileData)
+            userInfo.setUserAvatar(profileData.avatar)
             popupAvatarEdit.close();
             formValidatorProfilePhoto.setButtonState();
         })
@@ -129,41 +128,10 @@ function addNewPlaceSubmitHandler(data) {
     }
     api.addCardToServer(cardData)
         .then((result) => {
-            const card = new Card({
-                data: result, handleCardClick: () => {
-                    popupImage.open(cardData.link, cardData.name)
-                }
-            }, '#card', false, result.owner._id)
+            const card = createdCard (result,false,result.owner._id)
             const cardElement = card.generate();
             popupElementPlace.close();
             formValidatorPlace.setButtonState();
-
-            cardElement.querySelector('.card__trash').addEventListener('click', () => {
-                api.deleteCards(result._id)
-                .then(()=> card.deletCard())
-                    .catch((err) => {
-                        console.log(err);
-                    });
-            })
-            cardElement.querySelector('.card__button').addEventListener('click', (evt) => {
-                if (evt.target.classList.contains('card__button_checked')) {
-                    api.deleteLike(result._id)
-                        .then((res) => {
-                            card.LikeCard(evt, res)
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        })
-                } else {
-                    api.sendLike(result._id)
-                        .then((res) => {
-                            card.LikeCard(evt, res)
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        })
-                }
-            })
             placesList.addItemToStart(cardElement)
         })
         
