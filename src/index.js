@@ -22,6 +22,36 @@ const api = new Api({
     }
 })
 let placesList = null
+function createdCard (item, newNewArr,userID){
+  const card = new Card({
+        data: item, handleCardClick: () => {
+            popupImage.open(item.link, item.name)
+        },handleDeleteClick: () => {
+            api.deleteCards(item._id)
+                    .then(()=> card.deletCard())
+                    .catch((err) => console.log(err));
+        },handleLikeClick: (evt) =>{
+            if (evt.target.classList.contains('card__button_checked')) {
+                api.deleteLike(item._id)
+                    .then((res) => {
+                        card.LikeCard(evt, res)
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            } else {
+                api.sendLike(item._id)
+                    .then((res) => {
+                        card.LikeCard(evt, res)
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            }
+        }
+    }, '#card', newNewArr, userID)
+    return card
+}
  Promise.all([api.getCards(), api.getProfileData()])
     .then(([initialCards, profileData]) => {
         userInfo.setUserInfo(profileData)
@@ -37,39 +67,8 @@ let placesList = null
                 const newNewArr = newArr.some(myId => {
                     return myId === userID
                 })
-                const card = new Card({
-                    data: item, handleCardClick: () => {
-                        popupImage.open(item.link, item.name)
-
-                    }
-                }, '#card', newNewArr, profileData._id)
+                const card = createdCard (item,newNewArr,userID)
                 const cardElement = card.generate()
-                cardElement.querySelector('.card__trash').addEventListener('click', () => {
-                    api.deleteCards(item._id)
-                    .then(()=> card.deletCard())
-                        .catch((err) => {
-                            console.log(err);
-                        });
-                })
-                cardElement.querySelector('.card__button').addEventListener('click', (evt) => {
-                    if (evt.target.classList.contains('card__button_checked')) {
-                        api.deleteLike(item._id)
-                            .then((res) => {
-                                card.LikeCard(evt, res)
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            })
-                    } else {
-                        api.sendLike(item._id)
-                            .then((res) => {
-                                card.LikeCard(evt, res)
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            })
-                    }
-                })
                 placesList.addItem(cardElement)
             }
         }, '.places')
@@ -81,13 +80,13 @@ let placesList = null
 
 const userInfo = new UserInfo({ selectorName: '.profile__title', selectorDescription: '.profile__description', selectorAvatar: '.profile__avatar' })
 function addProfileAvatarSubmitHandler(data) {
-    popupAvatarEdit.renderLoading(true);
+    popupAvatarEdit.renderLoading(true, {a : 'Сохранение...', b : 'Сохранить'});
     const avatar = {
         avatar: data[0]
     };
     api.renderProfileAvatar(avatar)
         .then((profileData) => {
-            userInfo.setUserInfo(profileData)
+            userInfo.setUserAvatar(profileData.avatar)
             popupAvatarEdit.close();
             formValidatorProfilePhoto.setButtonState();
         })
@@ -95,13 +94,13 @@ function addProfileAvatarSubmitHandler(data) {
             console.log(err);
         })
         .finally(() => {
-            popupAvatarEdit.renderLoading(false);
+            popupAvatarEdit.renderLoading(false, {a : 'Сохранение...', b : 'Сохранить'});
         })
 
 }
 
 function addProfileInfoSubmitHandler(data) {
-    popupProfileEdit.renderLoading(true);
+    popupProfileEdit.renderLoading(true, {a : 'Сохранение...', b : 'Сохранить'});
     const profile = {
         name: data[0],
         about: data[1]
@@ -116,54 +115,23 @@ function addProfileInfoSubmitHandler(data) {
         console.log(err);
     })
     .finally(() => {
-        popupProfileEdit.renderLoading(false);
+        popupProfileEdit.renderLoading(false, {a : 'Сохранение...', b : 'Сохранить'});
     });
 
     }
 
 function addNewPlaceSubmitHandler(data) {
-    popupElementPlace.renderLoading(true);
+    popupElementPlace.renderLoading(true, {a : 'Создание...', b : 'Создать'});
     const cardData = {
         name: data[0],
         link: data[1]
     }
     api.addCardToServer(cardData)
         .then((result) => {
-            const card = new Card({
-                data: result, handleCardClick: () => {
-                    popupImage.open(cardData.link, cardData.name)
-                }
-            }, '#card', false, result.owner._id)
+            const card = createdCard (result,false,result.owner._id)
             const cardElement = card.generate();
             popupElementPlace.close();
             formValidatorPlace.setButtonState();
-
-            cardElement.querySelector('.card__trash').addEventListener('click', () => {
-                api.deleteCards(result._id)
-                .then(()=> card.deletCard())
-                    .catch((err) => {
-                        console.log(err);
-                    });
-            })
-            cardElement.querySelector('.card__button').addEventListener('click', (evt) => {
-                if (evt.target.classList.contains('card__button_checked')) {
-                    api.deleteLike(result._id)
-                        .then((res) => {
-                            card.LikeCard(evt, res)
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        })
-                } else {
-                    api.sendLike(result._id)
-                        .then((res) => {
-                            card.LikeCard(evt, res)
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        })
-                }
-            })
             placesList.addItemToStart(cardElement)
         })
         
@@ -171,7 +139,7 @@ function addNewPlaceSubmitHandler(data) {
             console.log(err);
         })
         .finally(() => {
-            popupElementPlace.renderLoading(false);
+            popupElementPlace.renderLoading(false, {a : 'Создание...', b : 'Создать'});
         })
 }
 

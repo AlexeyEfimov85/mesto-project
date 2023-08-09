@@ -25,19 +25,14 @@ export default class PopupWithForm extends Popup {
         this._popup.querySelector('.form').reset();
     }
 
-    renderLoading(isLoading) {
-        const formSubmitButtonTextDefault = this._popup.querySelector('.form__button_text_default');
-        const formSubmitButtonTextLoading = this._popup.querySelector('.form__button_text_loading');
-        if (isLoading) {
-            formSubmitButtonTextDefault.classList.add('form__button_text_invisible');
-            formSubmitButtonTextLoading.classList.remove('form__button_text_invisible');
-            formSubmitButtonTextLoading.classList.add('form__button_text_visible');
 
+
+    renderLoading(isLoading, obj) {
+        const formSubmitButtonTextDefault = this._popup.querySelector('.form__button_text_default');
+        if (isLoading) {
+            formSubmitButtonTextDefault.textContent = obj.a;
         } else {
-            formSubmitButtonTextDefault.classList.add('form__button_text_visible');
-            formSubmitButtonTextDefault.classList.remove('form__button_text_invisible');
-            formSubmitButtonTextLoading.classList.add('form__button_text_invisible');
-            formSubmitButtonTextLoading.classList.remove('form__button_text_visible');
+            formSubmitButtonTextDefault.textContent = obj.b;
         }
     }
 }
