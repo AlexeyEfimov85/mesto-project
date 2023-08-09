@@ -81,7 +81,7 @@ let placesList = null
 
 const userInfo = new UserInfo({ selectorName: '.profile__title', selectorDescription: '.profile__description', selectorAvatar: '.profile__avatar' })
 function addProfileAvatarSubmitHandler(data) {
-    popupAvatarEdit.renderLoading(true);
+    popupAvatarEdit.renderLoading(true, {a : 'Сохранение...', b : 'Сохранить'});
     const avatar = {
         avatar: data[0]
     };
@@ -95,13 +95,13 @@ function addProfileAvatarSubmitHandler(data) {
             console.log(err);
         })
         .finally(() => {
-            popupAvatarEdit.renderLoading(false);
+            popupAvatarEdit.renderLoading(false, {a : 'Сохранение...', b : 'Сохранить'});
         })
 
 }
 
 function addProfileInfoSubmitHandler(data) {
-    popupProfileEdit.renderLoading(true);
+    popupProfileEdit.renderLoading(true, {a : 'Сохранение...', b : 'Сохранить'});
     const profile = {
         name: data[0],
         about: data[1]
@@ -116,13 +116,13 @@ function addProfileInfoSubmitHandler(data) {
         console.log(err);
     })
     .finally(() => {
-        popupProfileEdit.renderLoading(false);
+        popupProfileEdit.renderLoading(false, {a : 'Сохранение...', b : 'Сохранить'});
     });
 
     }
 
 function addNewPlaceSubmitHandler(data) {
-    popupElementPlace.renderLoading(true);
+    popupElementPlace.renderLoading(true, {a : 'Создание...', b : 'Создать'});
     const cardData = {
         name: data[0],
         link: data[1]
@@ -171,7 +171,7 @@ function addNewPlaceSubmitHandler(data) {
             console.log(err);
         })
         .finally(() => {
-            popupElementPlace.renderLoading(false);
+            popupElementPlace.renderLoading(false, {a : 'Создание...', b : 'Создать'});
         })
 }
 
