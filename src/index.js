@@ -87,7 +87,7 @@ function addProfileAvatarSubmitHandler(data) {
     };
     api.renderProfileAvatar(avatar)
         .then((profileData) => {
-            userInfo.setUserInfo(profileData)
+            userInfo.setUserAvatar(profileData.avatar);
             popupAvatarEdit.close();
             formValidatorProfilePhoto.setButtonState();
         })
