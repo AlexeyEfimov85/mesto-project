@@ -3,6 +3,7 @@ export default class PopupWithForm extends Popup {
     constructor(selector, submitFormFunction) {
         super(selector);
         this._submitFormFunction = submitFormFunction;
+        this._formSubmitButton = this._popup.querySelector('.form__button_text_default');
     }
 
     _getInputValues() {
@@ -25,14 +26,8 @@ export default class PopupWithForm extends Popup {
         this._popup.querySelector('.form').reset();
     }
 
-
-
-    renderLoading(isLoading, obj) {
-        const formSubmitButtonTextDefault = this._popup.querySelector('.form__button_text_default');
-        if (isLoading) {
-            formSubmitButtonTextDefault.textContent = obj.a;
-        } else {
-            formSubmitButtonTextDefault.textContent = obj.b;
-        }
+    renderLoading(text) {
+        this._formSubmitButton.textContent = text;
     }
+
 }
