@@ -80,13 +80,13 @@ function createdCard (item, newNewArr,userID){
 
 const userInfo = new UserInfo({ selectorName: '.profile__title', selectorDescription: '.profile__description', selectorAvatar: '.profile__avatar' })
 function addProfileAvatarSubmitHandler(data) {
-    popupAvatarEdit.renderLoading(true, {a : 'Сохранение...', b : 'Сохранить'});
+    popupAvatarEdit.renderLoading('Сохранение...');
     const avatar = {
         avatar: data[0]
     };
     api.renderProfileAvatar(avatar)
         .then((profileData) => {
-            userInfo.setUserAvatar(profileData.avatar)
+            userInfo.setUserAvatar(profileData.avatar);
             popupAvatarEdit.close();
             formValidatorProfilePhoto.setButtonState();
         })
@@ -94,13 +94,13 @@ function addProfileAvatarSubmitHandler(data) {
             console.log(err);
         })
         .finally(() => {
-            popupAvatarEdit.renderLoading(false, {a : 'Сохранение...', b : 'Сохранить'});
+            popupAvatarEdit.renderLoading('Сохранить');
         })
 
 }
 
 function addProfileInfoSubmitHandler(data) {
-    popupProfileEdit.renderLoading(true, {a : 'Сохранение...', b : 'Сохранить'});
+    popupProfileEdit.renderLoading('Сохранение...');
     const profile = {
         name: data[0],
         about: data[1]
@@ -115,13 +115,13 @@ function addProfileInfoSubmitHandler(data) {
         console.log(err);
     })
     .finally(() => {
-        popupProfileEdit.renderLoading(false, {a : 'Сохранение...', b : 'Сохранить'});
+        popupProfileEdit.renderLoading('Сохранить');
     });
 
     }
 
 function addNewPlaceSubmitHandler(data) {
-    popupElementPlace.renderLoading(true, {a : 'Создание...', b : 'Создать'});
+    popupElementPlace.renderLoading('Создание...');
     const cardData = {
         name: data[0],
         link: data[1]
@@ -139,7 +139,7 @@ function addNewPlaceSubmitHandler(data) {
             console.log(err);
         })
         .finally(() => {
-            popupElementPlace.renderLoading(false, {a : 'Создание...', b : 'Создать'});
+            popupElementPlace.renderLoading('Создать');
         })
 }
 
