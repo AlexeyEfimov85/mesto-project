@@ -1,5 +1,5 @@
 export class Card {
-    constructor({ data, handleCardClick }, selector, newNewArr, userID) {
+    constructor({ data, handleCardClick ,handleDeleteClick,handleLikeClick}, selector, newNewArr, userID) {
         this._selector = selector
         this._name = data.name
         this._link = data.link
@@ -9,6 +9,8 @@ export class Card {
         this._cardID = data._id
         this._handleCardClick = handleCardClick
         this._userID = userID
+        this._handleDeleteClick= handleDeleteClick
+        this._handleLikeClick = handleLikeClick
     }
     _getElement() {
         const cardElement = document.
@@ -55,8 +57,14 @@ export class Card {
     }
 
     _setEventListeners() {
-        this._element.querySelector('.card__image').addEventListener('click', (evt) => {
-            this._handleCardClick(evt)
+        this._element.querySelector('.card__image').addEventListener('click', () => {
+            this._handleCardClick()
+        })
+        this._element.querySelector('.card__trash').addEventListener('click', () => {
+            this._handleDeleteClick()
+        })
+        this._element.querySelector('.card__button').addEventListener('click', (evt) => {
+            this._handleLikeClick(evt)
         })
     }
 
